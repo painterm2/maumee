@@ -240,7 +240,6 @@ select option { background:var(--bg2); }
 /* Score panel — GPS compact strip floating over map */
 .score-panel {
   position:absolute; bottom:0; left:0; right:0; z-index:10;
-  background: linear-gradient(to bottom, transparent 0%, rgba(4,6,15,.6) 18%, rgba(4,6,15,.9) 44%, var(--bg) 100%);
 }
 
 /* Player name / badge row */
@@ -466,6 +465,96 @@ table.sc thead tr:nth-child(2) th { background:var(--bg1); color:var(--ink2); fo
 @media(min-width:430px) {
   #app { border-left:1px solid var(--border); border-right:1px solid var(--border); }
 }
+
+/* ── BACK/MID/FRONT distance card overlay ── */
+.dist-card {
+  position:absolute; left:12px; z-index:9;
+  background:rgba(4,6,15,.85); border:1px solid rgba(255,255,255,.14);
+  border-radius:10px; padding:8px 12px;
+  backdrop-filter:blur(10px);
+  display:flex; flex-direction:column; gap:1px;
+  transition:bottom .2s;
+}
+.dc-row { display:flex; align-items:center; gap:5px; }
+.dc-arrow { font-size:.65rem; color:var(--ink3); line-height:1; margin-top:1px; }
+.dc-val { font-family:var(--font-display); font-size:1.5rem; letter-spacing:.02em; line-height:1.1; color:var(--ink); }
+.dc-mid .dc-val { font-size:1.9rem; color:#2ebd7e; }
+.dc-back .dc-val, .dc-front .dc-val { font-size:1.25rem; color:var(--ink2); opacity:.8; }
+.dc-lbl { font-size:.42rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--ink3); margin-left:1px; margin-top:4px; }
+
+/* ── GPS player strip at bottom ── */
+.gps-player-strip {
+  display:flex; align-items:center; gap:12px;
+  background:rgba(5,8,20,.95); border-top:1px solid rgba(255,255,255,.1);
+  padding:10px 14px 8px;
+  backdrop-filter:blur(20px);
+}
+.gps-av-circle {
+  width:44px; height:44px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:1rem; border:2px solid rgba(255,255,255,.15);
+}
+.gps-player-info { flex:1; display:flex; flex-direction:column; gap:1px; }
+.gps-player-name-lbl { font-size:.7rem; font-weight:700; color:var(--ink); }
+.gps-hole-score-row { display:flex; align-items:baseline; gap:6px; }
+.gps-rel { font-family:var(--font-display); font-size:1.2rem; letter-spacing:.04em; color:var(--ink2); line-height:1; }
+.gps-rel.eagle  { color:#c084fc; }
+.gps-rel.birdie { color:var(--red); }
+.gps-rel.par    { color:#60a5fa; }
+.gps-rel.bogey  { color:#fbbf24; }
+.gps-rel.double { color:#fb923c; }
+.gps-rel.over   { color:var(--over); }
+.gps-strokes { font-family:var(--font-display); font-size:2.4rem; letter-spacing:.04em; color:var(--ink); line-height:1; transition:color .2s; }
+.gps-strokes.eagle  { color:#c084fc; text-shadow:0 0 20px rgba(192,132,252,.6); }
+.gps-strokes.birdie { color:var(--red); text-shadow:0 0 20px rgba(227,25,55,.6); }
+.gps-strokes.par    { color:#60a5fa; }
+.gps-strokes.bogey  { color:#fbbf24; }
+.gps-strokes.double { color:#fb923c; }
+.gps-strokes.over   { color:var(--over); }
+.gps-score-adj {
+  display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0;
+}
+.gps-adj-sm {
+  width:36px; height:28px; border:none; border-radius:7px; cursor:pointer;
+  font-size:1.1rem; font-weight:300; display:flex; align-items:center; justify-content:center;
+  transition:all .12s; user-select:none;
+}
+.gps-adj-sm-plus { background:var(--red); color:#fff; }
+.gps-adj-sm-minus { background:rgba(255,255,255,.1); color:var(--ink2); }
+.gps-adj-sm:active { transform:scale(.84); }
+
+/* Stats compact row */
+.gps-stats-mini {
+  display:flex; align-items:center; gap:5px; padding:4px 14px 6px;
+  background:rgba(4,6,15,.95);
+}
+
+/* Skins badge */
+.skin-badge {
+  display:inline-flex; align-items:center; gap:3px;
+  background:rgba(251,191,36,.14); border:1px solid rgba(251,191,36,.3);
+  border-radius:20px; padding:1px 7px;
+  font-size:.62rem; font-weight:800; color:#fbbf24;
+}
+.lb-skins { display:flex; align-items:center; gap:4px; flex-direction:column; text-align:right; }
+.lb-thru { font-size:.6rem; color:var(--ink3); }
+
+/* Skins summary card */
+.skins-card {
+  margin:12px 20px; background:var(--bg2); border:1px solid rgba(251,191,36,.2);
+  border-radius:14px; overflow:hidden;
+}
+.skins-header { display:flex; align-items:center; justify-content:space-between; padding:10px 14px 8px; border-bottom:1px solid var(--border); }
+.skins-header h3 { font-family:var(--font-display); font-size:1.3rem; letter-spacing:.04em; }
+.skins-header span { font-size:.62rem; color:var(--ink2); }
+.skins-row { display:flex; align-items:center; gap:10px; padding:8px 14px; border-bottom:1px solid var(--border); }
+.skins-row:last-child { border-bottom:none; }
+.skins-av { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.75rem; flex-shrink:0; }
+.skins-name { flex:1; font-size:.82rem; font-weight:600; }
+.skins-count { font-family:var(--font-display); font-size:1.8rem; color:#fbbf24; letter-spacing:.04em; }
+.skins-val { font-size:.7rem; color:var(--ink3); }
+.carryover-pill { background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.25); border-radius:8px; padding:8px 14px; margin:8px 14px; font-size:.72rem; color:#fbbf24; }
+
 </style>
 </head>
 <body>
@@ -533,21 +622,30 @@ table.sc thead tr:nth-child(2) th { background:var(--bg1); color:var(--ink2); fo
   <div class="play-canvas" id="play-canvas">
     <div id="hole-svg-wrap"></div>
 
+    <!-- BACK/MID/FRONT distance card -->
+    <div class="dist-card" id="dist-card">
+      <div class="dc-row dc-back"><span class="dc-arrow">&#9650;</span><span class="dc-val" id="dc-back">—</span><span class="dc-lbl">BACK</span></div>
+      <div class="dc-row dc-mid"><span class="dc-val" id="dc-mid">—</span><span class="dc-lbl" style="color:rgba(46,189,126,.7)">MID</span></div>
+      <div class="dc-row dc-front"><span class="dc-arrow">&#9660;</span><span class="dc-val" id="dc-front">—</span><span class="dc-lbl">FRONT</span></div>
+    </div>
+
     <div class="score-panel">
-      <div class="gps-player-row">
-        <div class="fc-dot" id="fc-dot"></div>
-        <span class="gps-pname" id="fc-pname">Player</span>
-        <span class="gps-score-badge" id="score-lbl"></span>
-      </div>
-      <div class="gps-score-strip">
-        <button class="gps-adj-btn" onclick="adj(-1)">&#8249;</button>
-        <div class="gps-score-center">
-          <span class="gps-score-big" id="score-big">&#8212;</span>
-          <span class="gps-enter-lbl">ENTER SCORE</span>
+      <!-- gradient fade is handled by score-panel background -->
+      <div class="gps-player-strip">
+        <div class="gps-av-circle" id="fc-av">MP</div>
+        <div class="gps-player-info">
+          <div class="gps-player-name-lbl" id="fc-pname">Player</div>
+          <div class="gps-hole-score-row">
+            <span class="gps-rel" id="score-lbl">E</span>
+            <span class="gps-strokes" id="score-big">—</span>
+          </div>
         </div>
-        <button class="gps-adj-btn gps-adj-plus" onclick="adj(1)">&#8250;</button>
+        <div class="gps-score-adj">
+          <button class="gps-adj-sm gps-adj-sm-plus" onclick="adj(1)">+</button>
+          <button class="gps-adj-sm gps-adj-sm-minus" onclick="adj(-1)">−</button>
+        </div>
       </div>
-      <div class="fc-stats" id="fc-stats"></div>
+      <div class="gps-stats-mini" id="fc-stats"></div>
       <div class="player-switcher" id="player-switcher"></div>
     </div>
   </div>
@@ -609,9 +707,19 @@ table.sc thead tr:nth-child(2) th { background:var(--bg1); color:var(--ink2); fo
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     Stats
   </button>
+  <button class="nb" id="nb-skins" onclick="showTab('skins')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M12 14v8M8 18h8"/></svg>
+    Skins
+  </button>
 </nav>
 
 </div><!-- #app -->
+
+<!-- ═══════════════════════════ SKINS ════════════════════════ -->
+<div id="s-skins" class="screen scrollable">
+  <div class="screen-head"><div><h2>Skins</h2><p>Hole-by-hole competition</p></div></div>
+  <div id="skins-body"></div>
+</div>
 
 <!-- ═══════════════════════════ SCRAMBLE OVERLAY ═════════════════ -->
 <div class="overlay" id="ov-scramble" onclick="closeOverlay('ov-scramble')">
@@ -684,7 +792,7 @@ function load(){
 }
 
 // ═══════════════════ NAV ═══════════════════
-const TABS = {home:'s-home',play:'s-play',card:'s-card',lb:'s-lb',stats:'s-stats'};
+const TABS = {home:'s-home',play:'s-play',card:'s-card',lb:'s-lb',stats:'s-stats',skins:'s-skins'};
 let curTab = 'home';
 
 function showTab(t){
@@ -699,6 +807,7 @@ function showTab(t){
   if(t==='card')   renderCard();
   if(t==='lb')     renderLB();
   if(t==='stats')  renderStats();
+  if(t==='skins')  renderSkins();
 }
 
 // ═══════════════════ PLAYERS ═══════════════════
@@ -829,6 +938,21 @@ function makeHoleSVG(h, tee='white'){
   else if(s==='slight-left'){ fcx200=W*.48; fcx150=W*.44; fcx100=W*.4; }
   else if(s==='slight-right'){ fcx200=W*.52; fcx150=W*.56; fcx100=W*.6; }
 
+  // Shot line from tee to green (follows fairway shape)
+  let shotLine;
+  const stx=W/2, sty=yTee;
+  if(s==='dogleg-left'){
+    shotLine=`M\${stx},\${sty} L\${W*.5},\${H*.53} Q\${W*.42},\${H*.43} \${gx+W*.04},\${gy+H*.06} L\${gx},\${gy}`;
+  } else if(s==='dogleg-right'){
+    shotLine=`M\${stx},\${sty} L\${W*.5},\${H*.53} Q\${W*.58},\${H*.43} \${gx-W*.04},\${gy+H*.06} L\${gx},\${gy}`;
+  } else if(s==='slight-left'){
+    shotLine=`M\${stx},\${sty} Q\${fcx150},\${y150} \${gx},\${gy}`;
+  } else if(s==='slight-right'){
+    shotLine=`M\${stx},\${sty} Q\${fcx150},\${y150} \${gx},\${gy}`;
+  } else {
+    shotLine=`M\${stx},\${sty} L\${gx},\${gy}`;
+  }
+
   // bunker positions
   const bArr=[
     [gx-gr*1.8, gy+gr, gr, gr*.42],
@@ -892,29 +1016,19 @@ function makeHoleSVG(h, tee='white'){
   <ellipse cx="${bx-.03*brx}" cy="${by-.1*bry}" rx="${brx*.58}" ry="${bry*.52}" fill="${bkrHigh}" opacity=".55"/>
   `).join('')}
 
-  <!-- GPS distance badges at 200/150/100 -->
+  <!-- shot line tee to green -->
+  <path d="${shotLine}" stroke="rgba(255,255,255,.65)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="${shotLine}" stroke="rgba(255,255,255,.18)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- GPS distance oval badges on the line -->
   ${h.par===3?`
-  <g filter="url(#${id}glow)">
-    <circle cx="${W/2}" cy="${y150}" r="22" fill="rgba(4,6,15,.85)" stroke="rgba(46,189,126,.5)" stroke-width="1.8"/>
-    <text x="${W/2}" y="${y150-4}" text-anchor="middle" font-family="'Bebas Neue',Impact,sans-serif" font-size="17" fill="#f0f4ff" letter-spacing="0.5">${yardage}</text>
-    <text x="${W/2}" y="${y150+11}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" font-weight="700" fill="rgba(46,189,126,.75)" letter-spacing="1">YDS</text>
-  </g>
+  <rect x="${W/2-26}" y="${y150-13}" width="52" height="26" rx="13" fill="rgba(4,6,15,.88)" stroke="rgba(46,189,126,.6)" stroke-width="1.8"/>
+  <text x="${W/2}" y="${y150+6}" text-anchor="middle" font-family="'Bebas Neue',Impact,sans-serif" font-size="19" fill="#f0f4ff" letter-spacing="0.5">${yardage}</text>
   `:`
-  <g filter="url(#${id}glow)" opacity=".82">
-    <circle cx="${fcx200}" cy="${y200}" r="22" fill="rgba(4,6,15,.82)" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>
-    <text x="${fcx200}" y="${y200-4}" text-anchor="middle" font-family="'Bebas Neue',Impact,sans-serif" font-size="17" fill="#f0f4ff" letter-spacing="0.5">200</text>
-    <text x="${fcx200}" y="${y200+11}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" font-weight="700" fill="rgba(240,244,255,.45)" letter-spacing="1">BACK</text>
-  </g>
-  <g filter="url(#${id}glow)">
-    <circle cx="${fcx150}" cy="${y150}" r="24" fill="rgba(4,6,15,.88)" stroke="rgba(46,189,126,.55)" stroke-width="2"/>
-    <text x="${fcx150}" y="${y150-4}" text-anchor="middle" font-family="'Bebas Neue',Impact,sans-serif" font-size="18" fill="#f0f4ff" letter-spacing="0.5">150</text>
-    <text x="${fcx150}" y="${y150+11}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" font-weight="700" fill="rgba(46,189,126,.8)" letter-spacing="1">MID</text>
-  </g>
-  <g filter="url(#${id}glow)" opacity=".85">
-    <circle cx="${fcx100}" cy="${y100}" r="22" fill="rgba(4,6,15,.82)" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/>
-    <text x="${fcx100}" y="${y100-4}" text-anchor="middle" font-family="'Bebas Neue',Impact,sans-serif" font-size="17" fill="#f0f4ff" letter-spacing="0.5">100</text>
-    <text x="${fcx100}" y="${y100+11}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" font-weight="700" fill="rgba(240,244,255,.45)" letter-spacing="1">FRONT</text>
-  </g>
+  <rect x="${fcx150-26}" y="${y150-14}" width="52" height="28" rx="14" fill="rgba(4,6,15,.9)" stroke="rgba(46,189,126,.65)" stroke-width="2"/>
+  <text x="${fcx150}" y="${y150+6}" text-anchor="middle" font-family="'Bebas Neue',Impact,sans-serif" font-size="20" fill="#f0f4ff" letter-spacing="0.5">150</text>
+  <rect x="${fcx100-22}" y="${y100-12}" width="44" height="24" rx="12" fill="rgba(4,6,15,.85)" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>
+  <text x="${fcx100}" y="${y100+5}" text-anchor="middle" font-family="'Bebas Neue',Impact,sans-serif" font-size="17" fill="#f0f4ff" letter-spacing="0.5">100</text>
   `}
 
   <!-- green glow bloom -->
@@ -929,9 +1043,9 @@ function makeHoleSVG(h, tee='white'){
   <line x1="${gx}" y1="${gy-gr*.2}" x2="${gx}" y2="${gy-gr*2.1}" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
   <polygon points="${gx},${gy-gr*2.1} ${gx+gr*.8},${gy-gr*1.75} ${gx},${gy-gr*1.4}" fill="#e31937"/>
 
-  <!-- tee box -->
-  <rect x="${W/2-18}" y="${H-32}" width="36" height="14" rx="4" fill="${teeClr}" opacity=".95"/>
-  <rect x="${W/2-12}" y="${H-29}" width="24" height="8" rx="2" fill="${fwNear}" opacity=".55"/>
+  <!-- tee marker (player position — red dot) -->
+  <circle cx="${W/2}" cy="${yTee}" r="9" fill="#e31937" stroke="rgba(255,255,255,.9)" stroke-width="2.5"/>
+  <circle cx="${W/2}" cy="${yTee}" r="4" fill="rgba(255,255,255,.8)"/>
 
 
 
@@ -996,8 +1110,9 @@ function renderPlay(){
   if(!S.round){
     document.getElementById('hole-svg-wrap').innerHTML='';
     document.getElementById('score-big').textContent='—';
-    document.getElementById('score-big').className='gps-score-big';
-    document.getElementById('score-lbl').textContent='';
+    document.getElementById('score-big').className='gps-strokes';
+    document.getElementById('score-lbl').textContent='E';
+    document.getElementById('score-lbl').className='gps-rel';
     document.getElementById('fc-stats').innerHTML='';
     document.getElementById('player-switcher').innerHTML='';
     document.getElementById('progress-strip').innerHTML='';
@@ -1017,6 +1132,17 @@ function renderPlay(){
 
   // SVG
   document.getElementById('hole-svg-wrap').innerHTML = makeHoleSVG(h, tee);
+
+  // BACK/MID/FRONT distances from tee
+  const yds = h.yds[tee]||h.yds.white;
+  const dcEl = document.getElementById('dist-card');
+  if(dcEl){
+    document.getElementById('dc-back').textContent  = yds + 15;
+    document.getElementById('dc-mid').textContent   = yds;
+    document.getElementById('dc-front').textContent = Math.max(0, yds - 15);
+    // Position above the score panel (approx 170px from bottom)
+    dcEl.style.bottom = '170px';
+  }
 
   // Progress dots
   const holes = getHoles();
@@ -1047,16 +1173,30 @@ function renderFocusCard(h){
   const lbl = sc ? scoreLabel(sc,h.par) : '';
   const color = isScramble ? '#e31937' : e.color;
 
-  document.getElementById('fc-dot').style.background = color;
+  // Avatar
+  const avEl = document.getElementById('fc-av');
+  if(avEl){
+    avEl.textContent = initials(e.name);
+    avEl.style.background = color+'33';
+    avEl.style.color = color;
+    avEl.style.borderColor = color+'66';
+  }
   document.getElementById('fc-pname').textContent = e.name;
 
+  // Strokes display
   const bigEl = document.getElementById('score-big');
   bigEl.textContent = sc||'—';
-  bigEl.className = 'gps-score-big '+(sc?cls:'');
+  bigEl.className = 'gps-strokes '+(sc?cls:'');
 
+  // Relative score display (E / +1 / -1 etc)
   const lblEl = document.getElementById('score-lbl');
-  lblEl.textContent = lbl;
-  lblEl.className = 'gps-score-badge '+(sc?cls:'');
+  if(sc){
+    const d=sc-h.par;
+    lblEl.textContent = d===0?'E':d>0?'+'+d:''+d;
+  } else {
+    lblEl.textContent = 'E';
+  }
+  lblEl.className = 'gps-rel '+(sc?cls:'');
 
   // Stats
   if(!isScramble){
@@ -1114,10 +1254,11 @@ function adj(delta){
   const lbl=scoreLabel(sc,h.par);
 
   const bigEl=document.getElementById('score-big');
-  bigEl.textContent=sc; bigEl.className='gps-score-big '+cls;
+  bigEl.textContent=sc; bigEl.className='gps-strokes '+cls;
   bigEl.classList.add('popping'); setTimeout(()=>bigEl.classList.remove('popping'),240);
-  document.getElementById('score-lbl').textContent=lbl;
-  document.getElementById('score-lbl').className='gps-score-badge '+cls;
+  const d2=sc-h.par;
+  document.getElementById('score-lbl').textContent=d2===0?'E':d2>0?'+'+d2:''+d2;
+  document.getElementById('score-lbl').className='gps-rel '+cls;
 
   // update dots
   const holes=getHoles();
@@ -1247,11 +1388,16 @@ function renderLB(){
     rows.forEach((r,i)=>{
       const rs=r.rel===0?'E':r.rel>0?'+'+r.rel:''+r.rel;
       const rc=r.rel<0?'neg':r.rel>0?'pos':'even';
+      const skData = calcSkins();
+      const sk = skData.skins[r.p.id]||0;
       html+=`<div class="lb-row">
         <div class="lb-pos">${i+1}</div>
         <div class="lb-av" style="background:${r.p.color}22;color:${r.p.color}">${initials(r.p.name)}</div>
         <div class="lb-info"><strong>${r.p.name}</strong><small>Thru ${r.thru} · HCP ${r.p.hcp}</small></div>
-        <div class="lb-scores"><div class="lb-gross">${r.tot}</div><div class="lb-rel ${rc}">${rs}</div></div>
+        <div class="lb-skins">
+          <div class="lb-scores"><div class="lb-gross">${r.tot}</div><div class="lb-rel ${rc}">${rs}</div></div>
+          ${sk>0?`<div class="skin-badge">&#127922; ${sk} skin${sk>1?'s':''}</div>`:''}
+        </div>
       </div>`;
     });
     html+='</div>';
@@ -1331,6 +1477,84 @@ function renderStats(){
   });
   if(!html) html='<div class="empty">Enter scores to see stats</div>';
   el.innerHTML=html;
+}
+
+
+// ═══════════════════ SKINS ═══════════════════
+function calcSkins(){
+  // Only for own-ball rounds with players
+  if(!S.players.length) return {skins:{}, carryover:0, holeWins:{}};
+  const holes = S.course.holes;
+  const skins = {};
+  const holeWins = {}; // holeNum -> {winner: entityId, amount: n} | {tie: true}
+  S.players.forEach(p => skins[p.id] = 0);
+  let carryover = 1;
+  holes.forEach(h => {
+    const scored = S.players.map(p=>({p, sc:S.scores[p.id]?.[h.n]?.score||null}));
+    if(scored.some(x=>x.sc===null)) { holeWins[h.n]={pending:true,carryover}; return; }
+    const min = Math.min(...scored.map(x=>x.sc));
+    const winners = scored.filter(x=>x.sc===min);
+    if(winners.length===1){
+      skins[winners[0].p.id] += carryover;
+      holeWins[h.n] = {winner: winners[0].p.id, amount: carryover};
+      carryover = 1;
+    } else {
+      holeWins[h.n] = {tie: true, carryover};
+      carryover++;
+    }
+  });
+  return {skins, carryover: carryover-1, holeWins};
+}
+
+function renderSkins(){
+  const el = document.getElementById('skins-body');
+  if(!el) return;
+  if(!S.players.length || S.round!=='own18'){ el.innerHTML='<div class="empty">Start an 18-hole own ball round to track skins</div>'; return; }
+  const {skins, carryover, holeWins} = calcSkins();
+  const total = Object.values(skins).reduce((a,b)=>a+b,0);
+  const pending = Object.values(holeWins).filter(h=>h.pending).length;
+
+  // Skins per player sorted by skins won
+  const rows = S.players.map(p=>({p, sk:skins[p.id]||0})).sort((a,b)=>b.sk-a.sk);
+
+  let html = `<div class="skins-card">
+    <div class="skins-header"><h3>&#127922; Skins</h3><span>${total} awarded · ${pending} pending</span></div>`;
+  rows.forEach(r=>{
+    html+=`<div class="skins-row">
+      <div class="skins-av" style="background:${r.p.color}22;color:${r.p.color}">${initials(r.p.name)}</div>
+      <div class="skins-name">${r.p.name}</div>
+      <div style="text-align:right">
+        <div class="skins-count">${r.sk}</div>
+        <div class="skins-val">skin${r.sk!==1?'s':''}</div>
+      </div>
+    </div>`;
+  });
+  if(carryover>0){
+    html+=`<div class="carryover-pill">&#128293; ${carryover} skin${carryover>1?'s':''} carrying over — next hole wins them all!</div>`;
+  }
+  html+='</div>';
+
+  // Hole-by-hole skins breakdown
+  html+='<div style="padding:0 0 8px"><div class="section-sep" style="margin-top:8px">Hole Results</div>';
+  S.course.holes.forEach(h=>{
+    const w = holeWins[h.n];
+    if(!w){ return; }
+    let icon='', detail='';
+    if(w.pending){ icon='&#x23F3;'; detail='waiting for scores'; }
+    else if(w.tie){ icon='&#x1F91D;'; detail=`Tie — ${w.carryover>1?w.carryover+' skins carry':'1 skin carries'}`; }
+    else {
+      const p = S.players.find(x=>x.id===w.winner);
+      icon='&#x1F3C6;'; detail=`${p?.name||'?'} wins ${w.amount} skin${w.amount>1?'s':''}`;
+    }
+    html+=`<div style="display:flex;align-items:center;gap:10px;padding:7px 20px;border-bottom:1px solid var(--border);font-size:.78rem">
+      <span style="font-family:var(--font-display);font-size:1rem;color:var(--ink3);width:22px">H${h.n}</span>
+      <span>${icon}</span>
+      <span style="color:var(--ink2)">${detail}</span>
+      <span style="margin-left:auto;font-size:.65rem;color:var(--ink3)">Par ${h.par}</span>
+    </div>`;
+  });
+  html+='</div>';
+  el.innerHTML = html;
 }
 
 // ═══════════════════ INIT ═══════════════════
