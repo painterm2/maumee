@@ -3,1498 +3,1383 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maumee Bay — Family Golf</title>
+<title>Maumee Bay Golf</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   DESIGN TOKENS
-============================================================ */
+/* ─────────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────────── */
 :root {
-  --bg:       #06091a;
-  --bg2:      #090e24;
-  --bg3:      #0e1530;
-  --bg4:      #141c3d;
-  --gold:     #e31937;
-  --gold-dim: rgba(227,25,55,0.35);
-  --gold-glow:rgba(227,25,55,0.10);
-  --cream:    #eef2ff;
-  --muted:    rgba(220,228,255,0.45);
-  --border:   rgba(227,25,55,0.22);
-  --border2:  rgba(255,255,255,0.08);
-  --green-bright: #60a5fa;
-  --eagle-clr:#c084fc;
-  --birdie-clr:#e31937;
-  --par-clr:  #60a5fa;
-  --bogey-clr:#fbbf24;
-  --double-clr:#fb923c;
-  --over-clr: #f87171;
-  --navy:     #002B5C;
-  --shadow:   0 4px 24px rgba(0,0,0,0.7);
-  --radius:   16px;
-  --radius-sm:10px;
+  --bg:      #04060f;
+  --bg1:     #070b18;
+  --bg2:     #0b1020;
+  --bg3:     #111828;
+  --bg4:     #172030;
+  --navy:    #002B5C;
+  --red:     #E31937;
+  --red-dim: rgba(227,25,55,0.18);
+  --red-glow:rgba(227,25,55,0.08);
+  --ink:     #f0f4ff;
+  --ink2:    rgba(240,244,255,0.55);
+  --ink3:    rgba(240,244,255,0.25);
+  --border:  rgba(240,244,255,0.08);
+  --border-r:rgba(227,25,55,0.25);
+  --glass:   rgba(255,255,255,0.04);
+  --glass-b: rgba(255,255,255,0.07);
+
+  --eagle:  #c084fc;
+  --birdie: #e31937;
+  --par:    #60a5fa;
+  --bogey:  #fbbf24;
+  --double: #fb923c;
+  --over:   #f87171;
+
+  --font-display: 'Bebas Neue', 'Impact', 'Arial Black', sans-serif;
+  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --r:  16px;
+  --r2: 12px;
 }
 
-/* ============================================================
-   BASE
-============================================================ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--cream);font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
+/* ─────────────────────────────────────────────
+   RESET + BASE
+───────────────────────────────────────────── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
 
-/* ============================================================
-   APP SHELL
-============================================================ */
-#app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;position:relative;overflow:hidden;}
+#app {
+  display:flex; flex-direction:column; height:100%;
+  max-width:430px; margin:0 auto;
+  position:relative; overflow:hidden;
+  background: linear-gradient(180deg, var(--bg1) 0%, var(--bg) 100%);
+}
 
-/* ============================================================
+/* ─────────────────────────────────────────────
    SCREENS
-============================================================ */
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;visibility:hidden;opacity:0;transition:opacity 0.3s,visibility 0.3s;}
-.screen.active{visibility:visible;opacity:1;position:relative;}
+───────────────────────────────────────────── */
+.screen { position:absolute; inset:0; display:flex; flex-direction:column; overflow:hidden; opacity:0; visibility:hidden; transition:opacity .25s, visibility .25s; }
+.screen.active { opacity:1; visibility:visible; position:relative; }
+.scrollable { overflow-y:auto; scrollbar-width:none; }
+.scrollable::-webkit-scrollbar { display:none; }
 
-/* ============================================================
+/* ─────────────────────────────────────────────
    BOTTOM NAV
-============================================================ */
-#bottom-nav{
+───────────────────────────────────────────── */
+#bnav {
   flex-shrink:0;
-  display:flex;
-  background:var(--bg2);
+  display:flex; align-items:stretch;
+  background:var(--bg1);
   border-top:1px solid var(--border);
-  padding:8px 0 calc(8px + env(safe-area-inset-bottom));
-  z-index:100;
+  padding-bottom: env(safe-area-inset-bottom);
 }
-.nav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  background:none;border:none;cursor:pointer;
-  color:var(--muted);font-size:0.62rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
-  padding:4px 0;transition:color 0.2s;
+.nb {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  background:none; border:none; cursor:pointer;
+  color:var(--ink3); font-family:var(--font-body); font-size:0.58rem; font-weight:700;
+  letter-spacing:0.07em; text-transform:uppercase; padding:10px 0;
+  transition:color .18s;
 }
-.nav-btn svg{width:22px;height:22px;transition:transform 0.2s;}
-.nav-btn.active{color:var(--gold);}
-.nav-btn.active svg{transform:scale(1.15);}
-.nav-btn:active svg{transform:scale(0.9);}
+.nb svg { width:20px; height:20px; transition:transform .2s; }
+.nb.active { color:var(--red); }
+.nb.active svg { transform:scale(1.15); }
+.nb:active svg { transform:scale(0.88); }
 
-/* ============================================================
-   SCREEN: HOME
-============================================================ */
-#screen-home{background:var(--bg);overflow-y:auto;}
-.home-hero{
-  position:relative;padding:40px 24px 28px;
-  background:linear-gradient(175deg,#0a1030 0%,#06091a 100%);
-  border-bottom:1px solid var(--border);
-}
-.home-hero::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 0%,rgba(227,25,55,0.1) 0%,transparent 70%);
-}
-.home-eyebrow{font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;position:relative;}
-.home-title{font-size:2rem;font-weight:800;line-height:1.1;color:var(--cream);position:relative;}
-.home-title span{color:var(--gold);}
-.home-sub{font-size:0.82rem;color:var(--muted);margin-top:6px;position:relative;}
+/* ─────────────────────────────────────────────
+   HOME SCREEN
+───────────────────────────────────────────── */
+#s-home { background:var(--bg); }
 
-.home-section{padding:20px 20px 0;}
-.home-section-title{font-size:0.68rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
-
-.add-player-form{background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:16px;}
-.form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
-.fg{display:flex;flex-direction:column;gap:5px;}
-.fg label{font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
-.fg input,.fg select{background:var(--bg4);border:1px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--cream);font-size:0.88rem;}
-.fg input:focus,.fg select:focus{outline:none;border-color:var(--gold);}
-.fg input[type=number]{width:70px;text-align:center;}
-.fg input[type=color]{width:44px;height:38px;padding:2px;border-radius:8px;cursor:pointer;}
-select option{background:var(--bg3);}
-
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;cursor:pointer;font-weight:700;border-radius:10px;transition:all 0.15s;letter-spacing:0.02em;}
-.btn-gold{background:var(--gold);color:#0c160c;padding:11px 18px;font-size:0.88rem;}
-.btn-gold:hover{background:#dbbe62;}
-.btn-gold:active{transform:scale(0.97);}
-.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--cream);padding:10px 16px;font-size:0.85rem;}
-.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
-.btn-ghost{background:rgba(255,255,255,0.05);color:var(--muted);padding:7px 12px;font-size:0.78rem;}
-.btn-ghost:hover{background:rgba(255,255,255,0.1);color:var(--cream);}
-.btn-sm{padding:7px 13px;font-size:0.78rem;border-radius:8px;}
-.btn-danger{background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.2);padding:6px 11px;font-size:0.75rem;border-radius:8px;}
-
-.player-card-home{
-  display:flex;align-items:center;gap:12px;
-  background:var(--bg3);border-radius:var(--radius-sm);border:1px solid var(--border2);
-  padding:12px 14px;margin-bottom:8px;
-}
-.player-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;flex-shrink:0;}
-.player-info{flex:1;}
-.player-info strong{display:block;font-size:0.92rem;font-weight:700;}
-.player-info span{font-size:0.75rem;color:var(--muted);}
-.player-tee-badge{font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;}
-.tee-blue{background:rgba(147,197,253,0.15);color:#93c5fd;}
-.tee-white{background:rgba(255,255,255,0.1);color:#e5e7eb;}
-.tee-gold{background:rgba(201,168,76,0.15);color:var(--gold);}
-.tee-red{background:rgba(248,113,113,0.15);color:#f87171;}
-
-.start-rounds{padding:20px;display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
-.start-card{
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);
-  padding:18px 20px;cursor:pointer;transition:all 0.2s;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.start-card:hover{border-color:var(--gold);background:var(--bg4);}
-.start-card:active{transform:scale(0.98);}
-.start-card-info strong{display:block;font-size:1rem;font-weight:700;color:var(--cream);margin-bottom:2px;}
-.start-card-info span{font-size:0.78rem;color:var(--muted);}
-.start-card-icon{width:44px;height:44px;border-radius:12px;background:var(--gold-glow);border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
-
-/* ============================================================
-   SCREEN: PLAY
-============================================================ */
-#screen-play{background:var(--bg);display:flex;flex-direction:column;}
-
-.hole-topbar{
+.home-head {
+  position:relative; overflow:hidden;
+  padding:48px 24px 28px;
+  background: linear-gradient(160deg, #0a0f28 0%, var(--bg) 100%);
+  border-bottom:1px solid var(--border-r);
   flex-shrink:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px 10px;
-  background:linear-gradient(180deg,var(--bg2) 0%,transparent 100%);
-  border-bottom:1px solid var(--border);
-  position:relative;z-index:10;
 }
-.hole-topbar-left{display:flex;flex-direction:column;}
-.hole-label{font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);}
-.hole-num-big{font-size:2.4rem;font-weight:900;line-height:1;color:var(--cream);}
-.hole-par-row{display:flex;align-items:center;gap:8px;margin-top:2px;}
-.hole-par-badge{background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:20px;padding:3px 10px;font-size:0.72rem;font-weight:700;color:var(--gold);}
-.hole-yards{font-size:0.75rem;color:var(--muted);}
-.hole-hcp{font-size:0.72rem;color:var(--muted);}
-
-.hole-progress{
-  display:flex;gap:3px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:160px;
+.home-head::before {
+  content:''; position:absolute; top:-60px; left:50%; transform:translateX(-50%);
+  width:300px; height:200px;
+  background:radial-gradient(ellipse, rgba(227,25,55,0.12) 0%, transparent 70%);
 }
-.hp-dot{
-  width:18px;height:18px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.55rem;font-weight:700;cursor:pointer;transition:all 0.2s;
-  border:1px solid var(--border2);color:var(--muted);background:var(--bg3);
+.home-eyebrow { font-size:0.65rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--red); margin-bottom:6px; position:relative; }
+.home-title { font-family:var(--font-display); font-size:3.2rem; letter-spacing:.04em; line-height:1; color:var(--ink); position:relative; }
+.home-title span { color:var(--red); }
+.home-sub { font-size:0.78rem; color:var(--ink2); margin-top:6px; position:relative; }
+
+.home-body { flex:1; overflow-y:auto; scrollbar-width:none; padding:20px; }
+.home-body::-webkit-scrollbar { display:none; }
+
+.section-label { font-size:0.62rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--ink3); margin-bottom:12px; }
+
+/* Add player */
+.add-form {
+  background:var(--glass); border:1px solid var(--border); border-radius:var(--r);
+  padding:16px; margin-bottom:20px;
 }
-.hp-dot.active{background:var(--gold);color:#0c160c;border-color:var(--gold);transform:scale(1.2);}
-.hp-dot.scored{background:var(--bg4);border-color:var(--border);color:var(--cream);}
-.hp-dot.eagle-dot{background:rgba(167,139,250,0.3);border-color:#a78bfa;color:#a78bfa;}
-.hp-dot.birdie-dot{background:rgba(248,113,113,0.3);border-color:#f87171;color:#f87171;}
-.hp-dot.bogey-dot{background:rgba(147,197,253,0.25);border-color:#93c5fd;color:#93c5fd;}
-.hp-dot.double-dot{background:rgba(251,146,60,0.25);border-color:#fb923c;color:#fb923c;}
-
-/* SVG hole illustration */
-.hole-illustration{
-  flex-shrink:0;
-  width:100%;
-  position:relative;
-  overflow:hidden;
+.frow { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
+.fg { display:flex; flex-direction:column; gap:5px; }
+.fg label { font-size:0.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink3); }
+.fg input, .fg select {
+  background:var(--bg3); border:1px solid var(--border); border-radius:8px;
+  padding:9px 11px; color:var(--ink); font-family:var(--font-body); font-size:0.85rem;
 }
-.hole-illustration svg{width:100%;display:block;}
+.fg input:focus, .fg select:focus { outline:none; border-color:var(--red); }
+.fg input[type=number] { width:68px; text-align:center; }
+.fg input[type=color] { width:44px; height:38px; padding:2px; border-radius:8px; cursor:pointer; }
+select option { background:var(--bg2); }
 
-/* Player scoring area */
-.scoring-area{
-  flex:1;overflow-x:auto;overflow-y:hidden;
-  display:flex;align-items:stretch;
-  gap:10px;padding:10px 16px 6px;
-  scrollbar-width:none;
-  scroll-snap-type:x mandatory;
+/* Buttons */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  border:none; cursor:pointer; font-family:var(--font-body); font-weight:700; border-radius:10px;
+  transition:all .15s; letter-spacing:.02em;
 }
-.scoring-area::-webkit-scrollbar{display:none;}
+.btn-red { background:var(--red); color:#fff; padding:11px 18px; font-size:0.85rem; }
+.btn-red:hover { background:#f03a52; }
+.btn-red:active { transform:scale(.96); }
+.btn-outline { background:transparent; border:1.5px solid var(--border); color:var(--ink); padding:10px 16px; font-size:0.82rem; }
+.btn-outline:hover { border-color:var(--red); color:var(--red); }
+.btn-ghost { background:var(--glass); border:1px solid var(--border); color:var(--ink2); padding:7px 12px; font-size:0.75rem; border-radius:8px; }
+.btn-ghost:hover { background:var(--glass-b); color:var(--ink); }
+.btn-sm { padding:7px 13px !important; font-size:0.75rem !important; border-radius:8px !important; }
+.btn-kill { background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.2); color:#f87171; padding:6px 10px; font-size:0.72rem; border-radius:8px; }
 
-.player-score-card{
-  flex-shrink:0;width:calc(50% - 10px);min-width:140px;
-  scroll-snap-align:start;
-  background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);
-  display:flex;flex-direction:column;align-items:center;padding:12px 8px 10px;
-  position:relative;overflow:hidden;transition:border-color 0.3s;
+/* Player chips */
+.player-row {
+  display:flex; align-items:center; gap:12px;
+  background:var(--glass); border:1px solid var(--border);
+  border-radius:var(--r2); padding:10px 14px; margin-bottom:8px;
+  animation: fadeup .2s ease;
 }
-.player-score-card.one-player{width:100%;}
-.player-score-card.three-up{width:calc(33.33% - 8px);min-width:120px;}
-.score-glow{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity 0.4s;}
-.player-score-card.eagle .score-glow{background:radial-gradient(ellipse at 50% 50%,rgba(167,139,250,0.2),transparent 70%);opacity:1;border-color:#a78bfa!important;}
-.player-score-card.birdie .score-glow{background:radial-gradient(ellipse at 50% 50%,rgba(248,113,113,0.18),transparent 70%);opacity:1;}
-.player-score-card.birdie{border-color:#f87171!important;}
-.player-score-card.par .score-glow{background:radial-gradient(ellipse at 50% 50%,rgba(134,239,172,0.1),transparent 70%);opacity:1;}
-.player-score-card.bogey{border-color:rgba(147,197,253,0.3)!important;}
-.player-score-card.double{border-color:rgba(251,146,60,0.35)!important;}
+@keyframes fadeup { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+.av { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.88rem; flex-shrink:0; }
+.pi { flex:1; }
+.pi strong { display:block; font-size:.88rem; font-weight:700; }
+.pi span { font-size:.72rem; color:var(--ink2); }
+.tee-pill { display:inline-block; padding:1px 7px; border-radius:20px; font-size:.62rem; font-weight:700; margin-left:5px; }
+.tee-blue  { background:rgba(147,197,253,.15); color:#93c5fd; }
+.tee-white { background:rgba(255,255,255,.1);  color:#d1d5db; }
+.tee-gold  { background:rgba(251,191,36,.13);  color:#fbbf24; }
+.tee-red   { background:rgba(227,25,55,.14);   color:var(--red); }
 
-.psc-name{font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-.psc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.score-display{font-size:3.2rem;font-weight:900;line-height:1;color:var(--cream);margin:2px 0;transition:all 0.15s;position:relative;z-index:1;}
-.score-label{font-size:0.65rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;min-height:14px;transition:color 0.3s;}
-.score-label.eagle{color:#a78bfa;}
-.score-label.birdie{color:#f87171;}
-.score-label.par{color:#86efac;}
-.score-label.bogey{color:#93c5fd;}
-.score-label.double{color:#fb923c;}
-.score-label.over{color:#f87171;}
-
-.score-btns{display:flex;gap:8px;align-items:center;margin-bottom:10px;position:relative;z-index:1;}
-.score-btn{
-  width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
-  font-size:1.5rem;font-weight:300;display:flex;align-items:center;justify-content:center;
-  transition:all 0.12s;user-select:none;
+/* Start cards */
+.start-card {
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--glass); border:1px solid var(--border); border-radius:var(--r);
+  padding:18px; margin-bottom:10px; cursor:pointer; transition:all .2s;
 }
-.score-btn-minus{background:rgba(255,255,255,0.08);color:var(--cream);}
-.score-btn-plus{background:var(--gold);color:#0c160c;}
-.score-btn:active{transform:scale(0.88);}
-.score-btn-minus:hover{background:rgba(255,255,255,0.14);}
-.score-btn-plus:hover{background:#dbbe62;}
-
-.psc-extras{display:flex;gap:6px;position:relative;z-index:1;}
-.extra-btn{
-  display:flex;align-items:center;gap:3px;padding:4px 8px;border-radius:6px;
-  border:1px solid var(--border2);background:var(--bg4);
-  font-size:0.65rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;
-  color:var(--muted);cursor:pointer;transition:all 0.15s;
-}
-.extra-btn.on{border-color:var(--green-bright);background:rgba(82,183,136,0.12);color:var(--green-bright);}
-.extra-btn:active{transform:scale(0.94);}
-
-.putt-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;position:relative;z-index:1;}
-.putt-label{font-size:0.65rem;color:var(--muted);font-weight:600;}
-.putt-btn{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.07);border:none;color:var(--cream);font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.12s;}
-.putt-btn:hover{background:rgba(255,255,255,0.14);}
-.putt-val{font-size:0.85rem;font-weight:700;min-width:18px;text-align:center;}
-
-/* Hole nav footer */
-.hole-nav{
-  flex-shrink:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
-  background:var(--bg2);border-top:1px solid var(--border);
-  gap:10px;
-}
-.hole-nav-btn{
-  display:flex;align-items:center;gap:6px;padding:10px 16px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
-  color:var(--cream);font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.15s;
-  white-space:nowrap;
-}
-.hole-nav-btn:hover{border-color:var(--gold);color:var(--gold);}
-.hole-nav-btn:active{transform:scale(0.96);}
-.hole-nav-btn:disabled{opacity:0.3;pointer-events:none;}
-.hole-nav-center{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;
-  padding:8px 12px;
-}
-.hole-nav-center .mini-score{font-size:0.72rem;color:var(--gold);}
-
-/* ============================================================
-   SCREEN: SCORECARD
-============================================================ */
-#screen-scorecard{background:var(--bg);overflow-y:auto;}
-.card-header-bar{
-  padding:20px 20px 14px;
-  background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
-  border-bottom:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;
-}
-.card-header-bar h2{font-size:1.1rem;font-weight:800;color:var(--cream);}
-.card-header-bar p{font-size:0.75rem;color:var(--muted);}
-
-.sc-wrap{overflow-x:auto;padding:16px 12px;}
-table.sc{border-collapse:collapse;min-width:500px;width:100%;font-size:0.75rem;}
-table.sc th,table.sc td{padding:6px 7px;text-align:center;border:1px solid rgba(255,255,255,0.06);}
-table.sc thead tr:first-child th{background:var(--bg3);color:var(--gold);font-weight:700;font-size:0.65rem;letter-spacing:0.06em;text-transform:uppercase;}
-table.sc thead tr:nth-child(2) th{background:var(--bg2);color:var(--muted);font-size:0.68rem;}
-table.sc .par-total{background:var(--bg2);color:var(--gold);font-weight:700;}
-table.sc .player-name-cell{text-align:left;white-space:nowrap;background:var(--bg3);}
-table.sc tfoot td{background:var(--bg3);font-weight:700;color:var(--gold);}
-
-.sc-eagle{background:rgba(167,139,250,0.25)!important;color:#c4b5fd!important;font-weight:700;}
-.sc-birdie{background:rgba(248,113,113,0.22)!important;color:#fca5a5!important;font-weight:700;}
-.sc-par{color:var(--cream);}
-.sc-bogey{background:rgba(147,197,253,0.15)!important;color:#bfdbfe!important;}
-.sc-double{background:rgba(251,146,60,0.2)!important;color:#fdba74!important;font-weight:600;}
-.sc-triple{background:rgba(248,113,113,0.2)!important;color:#fca5a5!important;font-weight:700;}
-
-/* ============================================================
-   SCREEN: LEADERBOARD
-============================================================ */
-#screen-leaderboard{background:var(--bg);overflow-y:auto;}
-.lb-row{
-  display:flex;align-items:center;gap:14px;
-  padding:14px 20px;border-bottom:1px solid var(--border2);
-  transition:background 0.15s;
-}
-.lb-row:first-child{background:rgba(201,168,76,0.06);}
-.lb-pos{font-size:1.3rem;font-weight:900;color:var(--muted);width:28px;text-align:center;flex-shrink:0;}
-.lb-row:first-child .lb-pos{color:var(--gold);}
-.lb-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;flex-shrink:0;}
-.lb-info{flex:1;}
-.lb-info strong{display:block;font-size:0.95rem;font-weight:700;}
-.lb-info span{font-size:0.75rem;color:var(--muted);}
-.lb-score{text-align:right;}
-.lb-gross{font-size:1.4rem;font-weight:900;color:var(--cream);}
-.lb-rel{font-size:0.8rem;font-weight:700;}
-.lb-rel.neg{color:#f87171;}
-.lb-rel.pos{color:#93c5fd;}
-.lb-rel.even{color:var(--muted);}
-.lb-thru{font-size:0.68rem;color:var(--muted);}
-
-/* Scramble leaderboard */
-.section-divider{
-  padding:12px 20px 8px;
-  font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
-  color:var(--gold);background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  margin-top:8px;
+.start-card:hover { border-color:var(--red); background:var(--red-glow); }
+.start-card:active { transform:scale(.98); }
+.start-card strong { display:block; font-size:.95rem; font-weight:700; margin-bottom:2px; }
+.start-card span { font-size:.75rem; color:var(--ink2); }
+.start-icon {
+  width:46px; height:46px; border-radius:12px; flex-shrink:0;
+  background:var(--red-dim); border:1px solid var(--border-r);
+  display:flex; align-items:center; justify-content:center; font-size:1.4rem;
 }
 
-/* ============================================================
-   SCREEN: STATS
-============================================================ */
-#screen-stats{background:var(--bg);overflow-y:auto;}
-.stats-player-block{padding:16px 20px;border-bottom:1px solid var(--border2);}
-.stats-player-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-.stats-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;}
-.stats-player-header h3{font-size:1rem;font-weight:700;}
-.stats-player-header p{font-size:0.75rem;color:var(--muted);}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
-.stat-box{background:var(--bg3);border-radius:10px;padding:10px 8px;text-align:center;}
-.stat-box .sv{font-size:1.5rem;font-weight:900;color:var(--gold);line-height:1;}
-.stat-box .sl{font-size:0.62rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
-.scoring-breakdown{display:flex;flex-wrap:wrap;gap:6px;}
-.sb-pill{padding:4px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;}
-.sb-eagle{background:rgba(167,139,250,0.2);color:#a78bfa;}
-.sb-birdie{background:rgba(248,113,113,0.2);color:#f87171;}
-.sb-par{background:rgba(134,239,172,0.12);color:#86efac;}
-.sb-bogey{background:rgba(147,197,253,0.15);color:#93c5fd;}
-.sb-double{background:rgba(251,146,60,0.15);color:#fb923c;}
-.sb-triple{background:rgba(248,113,113,0.15);color:#f87171;}
+/* ─────────────────────────────────────────────
+   PLAY SCREEN — IMMERSIVE MAP LAYOUT
+───────────────────────────────────────────── */
+#s-play { background:var(--bg); }
 
-/* ============================================================
-   MODALS / OVERLAYS
-============================================================ */
-.overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.7);
-  display:flex;align-items:flex-end;justify-content:center;
-  z-index:200;opacity:0;pointer-events:none;transition:opacity 0.25s;
-  backdrop-filter:blur(4px);
+/* Compact top bar */
+.play-topbar {
+  flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
+  padding:10px 14px 8px;
+  background:rgba(4,6,15,.92);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  backdrop-filter:blur(12px);
+  position:relative; z-index:20;
 }
-.overlay.open{opacity:1;pointer-events:all;}
-.sheet{
-  width:100%;max-width:480px;
-  background:var(--bg2);border-radius:20px 20px 0 0;
-  border-top:1px solid var(--border);
-  padding-bottom:calc(20px + env(safe-area-inset-bottom));
-  transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);
-  max-height:80vh;overflow-y:auto;
+.play-left { display:flex; align-items:center; gap:10px; }
+.play-holenum { font-family:var(--font-display); font-size:2.4rem; letter-spacing:.06em; line-height:1; }
+.play-meta-col { display:flex; flex-direction:column; gap:1px; }
+.play-round-lbl { font-size:.55rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--red); }
+.play-meta { display:flex; align-items:center; gap:5px; }
+.par-pill {
+  background:var(--red-dim); border:1px solid var(--border-r); border-radius:20px;
+  padding:1px 8px; font-size:.64rem; font-weight:700; color:var(--red);
 }
-.overlay.open .sheet{transform:translateY(0);}
-.sheet-handle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:12px auto 16px;}
-.sheet-title{padding:0 20px 14px;font-size:1rem;font-weight:800;border-bottom:1px solid var(--border);}
+.meta-yds { font-size:.68rem; color:var(--ink2); }
+.meta-hcp { font-size:.62rem; color:var(--ink3); }
 
-/* Round select sheet */
-.round-option{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px;border-bottom:1px solid var(--border2);cursor:pointer;transition:background 0.15s;
+/* Progress strip */
+.progress-strip {
+  display:flex; gap:3px; align-items:center;
+  overflow-x:auto; scrollbar-width:none; max-width:160px;
+  flex-wrap:nowrap;
 }
-.round-option:hover{background:var(--bg3);}
-.round-option strong{display:block;font-size:0.95rem;font-weight:700;margin-bottom:2px;}
-.round-option span{font-size:0.78rem;color:var(--muted);}
-
-/* Scramble setup sheet */
-.team-setup-form{padding:16px 20px;}
-.team-card{
-  background:var(--bg3);border-radius:10px;border:1px solid var(--border2);
-  padding:12px 14px;margin-bottom:8px;
-  display:flex;align-items:center;justify-content:space-between;
+.progress-strip::-webkit-scrollbar { display:none; }
+.pd {
+  width:14px; height:14px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.45rem; font-weight:700; cursor:pointer;
+  transition:all .15s;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); color:var(--ink3);
 }
-.team-card strong{display:block;font-size:0.88rem;}
-.team-card span{font-size:0.75rem;color:var(--muted);}
+.pd.current { background:var(--red); border-color:var(--red); color:#fff; transform:scale(1.3); box-shadow:0 0 8px rgba(227,25,55,.5); }
+.pd.done { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.18); color:var(--ink2); }
+.pd.eagle-d  { background:rgba(192,132,252,.3); border-color:#c084fc; color:#c084fc; }
+.pd.birdie-d { background:rgba(227,25,55,.3);   border-color:var(--red); color:#fca5a5; }
+.pd.bogey-d  { background:rgba(251,191,36,.2);   border-color:#fbbf24; color:#fbbf24; }
+.pd.double-d { background:rgba(251,146,60,.22);  border-color:#fb923c; color:#fb923c; }
 
-/* ============================================================
-   ANIMATIONS
-============================================================ */
-@keyframes slideInRight{from{transform:translateX(30px);opacity:0;}to{transform:translateX(0);opacity:1;}}
-@keyframes slideInLeft{from{transform:translateX(-30px);opacity:0;}to{transform:translateX(0);opacity:1;}}
-@keyframes scorePop{0%{transform:scale(1);}40%{transform:scale(1.35);}100%{transform:scale(1);}}
-@keyframes fadeUp{from{transform:translateY(8px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+/* Full-canvas play area — hole SVG fills this */
+.play-canvas {
+  flex:1; position:relative; overflow:hidden;
+}
 
-.hole-enter-right{animation:slideInRight 0.25s ease;}
-.hole-enter-left{animation:slideInLeft 0.25s ease;}
-.score-pop{animation:scorePop 0.25s ease;}
-.fade-up{animation:fadeUp 0.3s ease;}
+/* Hole SVG — fills entire canvas */
+#hole-svg-wrap {
+  position:absolute; inset:0; width:100%; height:100%;
+}
+#hole-svg-wrap svg { display:block; width:100%; height:100%; }
 
-/* ============================================================
-   EMPTY / UTILITY
-============================================================ */
-.empty{text-align:center;padding:40px 24px;color:var(--muted);font-size:0.88rem;}
-.empty svg{width:48px;height:48px;margin:0 auto 12px;display:block;opacity:0.3;}
-.badge-par3{background:rgba(134,239,172,0.12);color:#86efac;padding:2px 8px;border-radius:20px;font-size:0.65rem;font-weight:700;}
-.badge-par4{background:rgba(147,197,253,0.12);color:#93c5fd;padding:2px 8px;border-radius:20px;font-size:0.65rem;font-weight:700;}
-.badge-par5{background:rgba(253,230,138,0.12);color:#fde68a;padding:2px 8px;border-radius:20px;font-size:0.65rem;font-weight:700;}
+/* Score panel — floats at bottom of canvas over the SVG */
+.score-panel {
+  position:absolute; bottom:0; left:0; right:0; z-index:10;
+  padding:0 14px 14px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(4,6,15,.72) 28%, rgba(4,6,15,.96) 55%, var(--bg) 100%);
+}
 
-.rel-neg{color:#f87171;font-weight:700;}
-.rel-pos{color:#93c5fd;}
-.rel-e{color:var(--green-bright);font-weight:700;}
+/* Focused player card — no border, lives inside the gradient panel */
+.focus-card {
+  background:rgba(11,16,32,.7); border:1px solid rgba(255,255,255,.09);
+  border-radius:18px; padding:12px 16px 10px;
+  display:flex; flex-direction:column; align-items:center;
+  position:relative; overflow:hidden;
+  transition:border-color .3s;
+  backdrop-filter:blur(16px);
+}
+.focus-card::before {
+  content:''; position:absolute; top:-50px; left:50%; transform:translateX(-50%);
+  width:220px; height:180px; border-radius:50%;
+  transition:background .3s; pointer-events:none;
+  background:transparent;
+}
+.focus-card.eagle  { border-color:rgba(192,132,252,.45); }
+.focus-card.eagle::before  { background:radial-gradient(ellipse, rgba(192,132,252,.18) 0%, transparent 70%); }
+.focus-card.birdie { border-color:rgba(227,25,55,.45); }
+.focus-card.birdie::before { background:radial-gradient(ellipse, rgba(227,25,55,.15) 0%, transparent 70%); }
+.focus-card.par    { border-color:rgba(96,165,250,.28); }
+.focus-card.par::before    { background:radial-gradient(ellipse, rgba(96,165,250,.09) 0%, transparent 70%); }
+.focus-card.bogey  { border-color:rgba(251,191,36,.28); }
+.focus-card.bogey::before  { background:radial-gradient(ellipse, rgba(251,191,36,.08) 0%, transparent 70%); }
+.focus-card.double { border-color:rgba(251,146,60,.32); }
+.focus-card.double::before { background:radial-gradient(ellipse, rgba(251,146,60,.1) 0%, transparent 70%); }
 
-.scrollable{overflow-y:auto;}
+.fc-name {
+  display:flex; align-items:center; gap:7px; align-self:flex-start;
+  font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink2);
+  margin-bottom:4px;
+}
+.fc-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
-@media(min-width:480px){
-  #app{border-left:1px solid var(--border);border-right:1px solid var(--border);}
+.fc-score-wrap {
+  display:flex; align-items:center; justify-content:center;
+  gap:24px; width:100%; position:relative; z-index:1;
+}
+.score-adj-btn {
+  width:60px; height:60px; border-radius:50%; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2rem; font-weight:300; transition:all .12s; user-select:none; flex-shrink:0;
+}
+.score-adj-minus {
+  background:rgba(255,255,255,.08); color:var(--ink); border:1px solid rgba(255,255,255,.12);
+}
+.score-adj-minus:hover { background:rgba(255,255,255,.14); }
+.score-adj-plus {
+  background:var(--red); color:#fff;
+  box-shadow: 0 4px 24px rgba(227,25,55,.45);
+}
+.score-adj-plus:hover { background:#f03a52; }
+.score-adj-btn:active { transform:scale(.82); }
+
+.score-num-block { text-align:center; min-width:100px; }
+.score-big {
+  font-family:var(--font-display); font-size:6rem; letter-spacing:.04em; line-height:1;
+  color:var(--ink); transition:color .25s;
+  display:block;
+}
+.score-big.eagle  { color:#c084fc; text-shadow: 0 0 50px rgba(192,132,252,.6); }
+.score-big.birdie { color:var(--red); text-shadow: 0 0 50px rgba(227,25,55,.6); }
+.score-big.par    { color:#60a5fa; text-shadow: 0 0 30px rgba(96,165,250,.3); }
+.score-big.bogey  { color:#fbbf24; }
+.score-big.double { color:#fb923c; }
+.score-big.over   { color:var(--over); }
+
+.score-lbl {
+  font-size:.65rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  margin-top:1px; min-height:14px; transition:color .25s;
+}
+.score-lbl.eagle  { color:#c084fc; }
+.score-lbl.birdie { color:var(--red); }
+.score-lbl.par    { color:#60a5fa; }
+.score-lbl.bogey  { color:#fbbf24; }
+.score-lbl.double { color:#fb923c; }
+.score-lbl.over   { color:var(--over); }
+
+/* Stats row */
+.fc-stats {
+  display:flex; align-items:center; gap:7px; margin-top:8px;
+  position:relative; z-index:1; width:100%;
+}
+.putt-ctrl {
+  display:flex; align-items:center; gap:5px;
+  background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:8px;
+  padding:4px 9px;
+}
+.putt-ctrl .pb { width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,.08); border:none; color:var(--ink); cursor:pointer; font-size:.85rem; display:flex; align-items:center; justify-content:center; transition:background .12s; }
+.putt-ctrl .pb:active { transform:scale(.85); }
+.putt-ctrl .pv { font-size:.78rem; font-weight:700; min-width:20px; text-align:center; }
+.putt-ctrl .pl { font-size:.58rem; color:var(--ink3); font-weight:600; }
+.stat-tog {
+  display:flex; align-items:center; gap:4px; padding:4px 9px;
+  background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:8px;
+  font-size:.6rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink3); cursor:pointer; transition:all .15s;
+}
+.stat-tog.on { background:rgba(96,165,250,.12); border-color:rgba(96,165,250,.4); color:#93c5fd; }
+.stat-tog:active { transform:scale(.92); }
+
+/* Player switcher */
+.player-switcher {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  margin-top:9px;
+}
+.ps-dot {
+  width:7px; height:7px; border-radius:50%; cursor:pointer; transition:all .2s;
+  background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.15);
+}
+.ps-dot.active { width:20px; border-radius:4px; background:var(--red); border-color:var(--red); }
+
+/* Hole nav — compact strip at bottom */
+.hole-nav {
+  flex-shrink:0; display:flex; align-items:center; gap:6px;
+  padding:6px 14px calc(6px + env(safe-area-inset-bottom));
+  background:rgba(4,6,15,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.hn-btn {
+  display:flex; align-items:center; gap:4px;
+  padding:9px 14px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.09);
+  border-radius:10px; color:var(--ink); font-family:var(--font-body); font-size:.75rem;
+  font-weight:700; cursor:pointer; transition:all .15s; white-space:nowrap;
+}
+.hn-btn:hover { border-color:var(--red); color:var(--red); }
+.hn-btn:active { transform:scale(.94); }
+.hn-btn:disabled { opacity:.2; pointer-events:none; }
+.hn-mid {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:1px;
+  cursor:pointer; padding:6px;
+}
+.hn-mid-icon { width:18px; height:18px; color:var(--ink3); }
+.hn-mid span { font-size:.55rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink3); }
+
+/* Hole slide transition */
+@keyframes slideInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:none} }
+@keyframes slideInLeft  { from{opacity:0;transform:translateX(-30px)} to{opacity:1;transform:none} }
+.hole-enter-right { animation:slideInRight .22s cubic-bezier(.25,.46,.45,.94); }
+.hole-enter-left  { animation:slideInLeft  .22s cubic-bezier(.25,.46,.45,.94); }
+
+/* ─────────────────────────────────────────────
+   SCORECARD SCREEN
+───────────────────────────────────────────── */
+#s-card { background:var(--bg); }
+.screen-head {
+  flex-shrink:0; padding:20px 20px 14px;
+  background:var(--bg1); border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.screen-head h2 { font-family:var(--font-display); font-size:1.8rem; letter-spacing:.05em; }
+.screen-head p { font-size:.72rem; color:var(--ink2); }
+
+.sc-wrap { overflow-x:auto; padding:12px 12px 0; }
+table.sc { border-collapse:collapse; min-width:480px; width:100%; font-size:.72rem; }
+table.sc th, table.sc td { padding:6px 8px; text-align:center; border:1px solid rgba(255,255,255,.05); }
+table.sc thead tr:first-child th { background:var(--bg2); color:var(--red); font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; }
+table.sc thead tr:nth-child(2) th { background:var(--bg1); color:var(--ink2); font-size:.65rem; }
+.sc-name { text-align:left !important; white-space:nowrap; background:var(--bg2) !important; }
+.sc-total { background:var(--bg2) !important; font-weight:700; color:var(--red); }
+.sc-eagle  { background:rgba(192,132,252,.2)!important; color:#c084fc!important; font-weight:700; }
+.sc-birdie { background:rgba(227,25,55,.18)!important;  color:#fca5a5!important; font-weight:700; }
+.sc-par    { color:var(--ink); }
+.sc-bogey  { background:rgba(251,191,36,.12)!important;  color:#fde68a!important; }
+.sc-double { background:rgba(251,146,60,.15)!important;  color:#fdba74!important; font-weight:600; }
+.sc-triple { background:rgba(248,113,113,.15)!important; color:#fca5a5!important; font-weight:700; }
+.sc-totals-table { margin-top:2px; }
+
+/* ─────────────────────────────────────────────
+   LEADERBOARD
+───────────────────────────────────────────── */
+#s-lb { background:var(--bg); }
+.lb-list { padding:8px 0; }
+.lb-row {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 20px; border-bottom:1px solid var(--border);
+  transition:background .15s;
+}
+.lb-row:first-child { background:rgba(227,25,55,.04); }
+.lb-pos { font-family:var(--font-display); font-size:1.6rem; letter-spacing:.04em; width:28px; text-align:center; color:var(--ink3); flex-shrink:0; }
+.lb-row:first-child .lb-pos { color:var(--red); }
+.lb-av { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex-shrink:0; }
+.lb-info { flex:1; }
+.lb-info strong { display:block; font-size:.92rem; font-weight:700; }
+.lb-info small { font-size:.7rem; color:var(--ink2); }
+.lb-scores { text-align:right; }
+.lb-gross { font-family:var(--font-display); font-size:1.8rem; letter-spacing:.04em; line-height:1; }
+.lb-rel { font-size:.75rem; font-weight:700; }
+.lb-rel.neg { color:var(--red); }
+.lb-rel.pos { color:#fbbf24; }
+.lb-rel.even { color:#60a5fa; }
+.lb-thru { font-size:.62rem; color:var(--ink3); }
+.section-sep { padding:10px 20px 8px; font-size:.6rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--red); background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); margin-top:6px; }
+
+/* ─────────────────────────────────────────────
+   STATS
+───────────────────────────────────────────── */
+#s-stats { background:var(--bg); }
+.stats-block { padding:20px; border-bottom:1px solid var(--border); animation:fadeup .25s ease; }
+.stats-ph { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.stats-av { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem; }
+.stats-ph h3 { font-size:.95rem; font-weight:700; }
+.stats-ph p { font-size:.72rem; color:var(--ink2); }
+.stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+.sg-box { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:12px 8px; text-align:center; }
+.sg-box .v { font-family:var(--font-display); font-size:1.9rem; letter-spacing:.04em; color:var(--red); line-height:1; }
+.sg-box .l { font-size:.58rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink3); margin-top:4px; }
+.sb-pills { display:flex; flex-wrap:wrap; gap:6px; }
+.sbp { padding:4px 10px; border-radius:20px; font-size:.7rem; font-weight:700; }
+.sbp-eagle  { background:rgba(192,132,252,.15); color:#c084fc; }
+.sbp-birdie { background:rgba(227,25,55,.15);   color:var(--red); }
+.sbp-par    { background:rgba(96,165,250,.1);   color:#93c5fd; }
+.sbp-bogey  { background:rgba(251,191,36,.1);   color:#fbbf24; }
+.sbp-double { background:rgba(251,146,60,.12);  color:#fb923c; }
+.sbp-triple { background:rgba(248,113,113,.12); color:#f87171; }
+
+/* ─────────────────────────────────────────────
+   OVERLAY / SHEET
+───────────────────────────────────────────── */
+.overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.75);
+  display:flex; align-items:flex-end; justify-content:center;
+  z-index:300; opacity:0; pointer-events:none; transition:opacity .25s;
+  backdrop-filter:blur(6px);
+}
+.overlay.open { opacity:1; pointer-events:all; }
+.sheet {
+  width:100%; max-width:430px;
+  background:var(--bg2); border-radius:20px 20px 0 0;
+  border-top:1px solid var(--border-r);
+  padding-bottom:calc(24px + env(safe-area-inset-bottom));
+  transform:translateY(100%); transition:transform .3s cubic-bezier(.32,.72,0,1);
+  max-height:82vh; overflow-y:auto; scrollbar-width:none;
+}
+.sheet::-webkit-scrollbar { display:none; }
+.overlay.open .sheet { transform:translateY(0); }
+.sheet-handle { width:36px; height:4px; background:rgba(255,255,255,.12); border-radius:2px; margin:12px auto 16px; }
+.sheet-title { padding:0 20px 14px; font-family:var(--font-display); font-size:1.6rem; letter-spacing:.04em; border-bottom:1px solid var(--border); }
+.sheet-body { padding:16px 20px; }
+.team-card { display:flex; align-items:center; justify-content:space-between; background:var(--glass); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:8px; }
+.team-card strong { display:block; font-size:.88rem; font-weight:700; }
+.team-card span { font-size:.72rem; color:var(--ink2); }
+
+/* ─────────────────────────────────────────────
+   SCORE POP ANIMATION
+───────────────────────────────────────────── */
+@keyframes scorePop { 0%{transform:scale(1)} 35%{transform:scale(1.3)} 100%{transform:scale(1)} }
+.popping { animation:scorePop .22s ease; }
+@keyframes fadeup { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+/* ─────────────────────────────────────────────
+   EMPTY STATE
+───────────────────────────────────────────── */
+.empty { text-align:center; padding:48px 24px; color:var(--ink3); font-size:.88rem; line-height:1.6; }
+.empty svg { width:40px; height:40px; margin:0 auto 14px; display:block; opacity:.25; }
+
+@media(min-width:430px) {
+  #app { border-left:1px solid var(--border); border-right:1px solid var(--border); }
 }
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ===================== SCREEN: HOME ===================== -->
-  <div id="screen-home" class="screen active scrollable">
-    <div class="home-hero">
-      <div class="home-eyebrow">⛳ Family Golf Trip</div>
-      <div class="home-title">Maumee <span>Bay</span></div>
-      <div class="home-sub" id="home-sub-text">Oregon, Ohio · Par 72 · Arthur Hills Design</div>
-    </div>
-
-    <div class="home-section">
-      <div class="home-section-title">Players</div>
-      <div class="add-player-form">
-        <div class="form-row" style="margin-bottom:10px">
-          <div class="fg" style="flex:1">
-            <label>Name</label>
-            <input type="text" id="p-name" placeholder="e.g. Dad" maxlength="16">
-          </div>
-          <div class="fg">
-            <label>HCP</label>
-            <input type="number" id="p-hcp" value="0" min="0" max="54">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="fg">
-            <label>Tee</label>
-            <select id="p-tee">
-              <option value="blue">Blue</option>
-              <option value="white" selected>White</option>
-              <option value="gold">Gold</option>
-              <option value="red">Red</option>
-            </select>
-          </div>
-          <div class="fg">
-            <label>Color</label>
-            <input type="color" id="p-color" value="#c9a84c">
-          </div>
-          <button class="btn btn-gold btn-sm" onclick="addPlayer()" style="margin-top:auto">+ Add</button>
-        </div>
-      </div>
-      <div id="player-list-home"></div>
-    </div>
-
-    <div class="start-rounds" id="start-rounds-section">
-      <div class="home-section-title" style="padding:0">Start a Round</div>
-      <div class="start-card" onclick="startRound('own18')">
-        <div class="start-card-info">
-          <strong>18-Hole Own Ball</strong>
-          <span>Individual stroke play · All 18 holes</span>
-        </div>
-        <div class="start-card-icon">🏌️</div>
-      </div>
-      <div class="start-card" onclick="openScrambleSetup()">
-        <div class="start-card-info">
-          <strong>9-Hole Scramble</strong>
-          <span>Team format · Choose front or back 9</span>
-        </div>
-        <div class="start-card-icon">🤝</div>
-      </div>
-    </div>
-
-    <div style="height:20px"></div>
+<!-- ═══════════════════════════ HOME ═══════════════════════════ -->
+<div id="s-home" class="screen active">
+  <div class="home-head">
+    <div class="home-eyebrow">⛳ Family Golf Trip</div>
+    <div class="home-title">Maumee<br><span>Bay</span></div>
+    <div class="home-sub" id="home-sub">Oregon, Ohio · Par 72 · Arthur Hills Design</div>
   </div>
-
-  <!-- ===================== SCREEN: PLAY ===================== -->
-  <div id="screen-play" class="screen">
-    <div class="hole-topbar">
-      <div class="hole-topbar-left">
-        <div class="hole-label" id="play-round-label">18-Hole Own Ball</div>
-        <div class="hole-num-big" id="play-hole-num">1</div>
-        <div class="hole-par-row">
-          <div class="hole-par-badge" id="play-par-badge">Par 4</div>
-          <div class="hole-yards" id="play-yards">385 yds</div>
-          <div class="hole-hcp" id="play-hcp">· HCP 9</div>
+  <div class="home-body">
+    <div class="section-label" style="margin-bottom:12px">Players</div>
+    <div class="add-form">
+      <div class="frow" style="margin-bottom:10px">
+        <div class="fg" style="flex:1"><label>Name</label><input type="text" id="p-name" placeholder="e.g. Dad" maxlength="16"></div>
+        <div class="fg"><label>HCP</label><input type="number" id="p-hcp" value="0" min="0" max="54"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Tee</label>
+          <select id="p-tee"><option value="blue">Blue</option><option value="white" selected>White</option><option value="gold">Gold</option><option value="red">Red</option></select>
         </div>
+        <div class="fg"><label>Color</label><input type="color" id="p-color" value="#e31937"></div>
+        <button class="btn btn-red btn-sm" onclick="addPlayer()" style="margin-top:auto">+ Add</button>
       </div>
-      <div class="hole-progress" id="hole-progress"></div>
     </div>
+    <div id="player-list"></div>
 
-    <div class="hole-illustration" id="hole-illustration"></div>
-
-    <div class="scoring-area" id="scoring-area"></div>
-
-    <div class="hole-nav">
-      <button class="hole-nav-btn" id="btn-prev-hole" onclick="prevHole()">
-        <svg viewBox="0 0 20 20" fill="currentColor" width="16"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/></svg>
-        Prev
-      </button>
-      <div class="hole-nav-center" onclick="showTab('scorecard')">
-        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="20"><rect x="3" y="4" width="14" height="12" rx="2"/><line x1="7" y1="8" x2="13" y2="8"/><line x1="7" y1="11" x2="13" y2="11"/></svg>
-        Scorecard
-      </div>
-      <button class="hole-nav-btn" id="btn-next-hole" onclick="nextHole()">
-        Next
-        <svg viewBox="0 0 20 20" fill="currentColor" width="16"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/></svg>
-      </button>
+    <div class="section-label" style="margin-top:24px">Start a Round</div>
+    <div class="start-card" onclick="startRound('own18')">
+      <div><strong>18-Hole Own Ball</strong><span>Individual stroke play · All 18 holes</span></div>
+      <div class="start-icon">🏌️</div>
     </div>
+    <div class="start-card" onclick="openScrambleSetup()">
+      <div><strong>9-Hole Scramble</strong><span>Team format · Front or Back 9</span></div>
+      <div class="start-icon">🤝</div>
+    </div>
+    <div style="height:24px"></div>
   </div>
-
-  <!-- ===================== SCREEN: SCORECARD ===================== -->
-  <div id="screen-scorecard" class="screen scrollable">
-    <div class="card-header-bar">
-      <div>
-        <h2>Scorecard</h2>
-        <p id="sc-round-label">18-Hole Own Ball</p>
-      </div>
-      <button class="btn btn-ghost btn-sm" onclick="showTab('play')">← Back to Play</button>
-    </div>
-    <div id="scorecard-content"></div>
-  </div>
-
-  <!-- ===================== SCREEN: LEADERBOARD ===================== -->
-  <div id="screen-leaderboard" class="screen scrollable">
-    <div class="card-header-bar">
-      <div><h2>Leaderboard</h2><p>Live standings</p></div>
-    </div>
-    <div id="lb-content"></div>
-  </div>
-
-  <!-- ===================== SCREEN: STATS ===================== -->
-  <div id="screen-stats" class="screen scrollable">
-    <div class="card-header-bar">
-      <div><h2>Stats</h2><p>Hole-by-hole breakdown</p></div>
-    </div>
-    <div id="stats-content"></div>
-  </div>
-
-  <!-- ===================== BOTTOM NAV ===================== -->
-  <nav id="bottom-nav">
-    <button class="nav-btn active" id="nav-home" onclick="showTab('home')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>
-      Home
-    </button>
-    <button class="nav-btn" id="nav-play" onclick="showTab('play')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill="currentColor"/>
-      </svg>
-      Play
-    </button>
-    <button class="nav-btn" id="nav-scorecard" onclick="showTab('scorecard')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/>
-      </svg>
-      Card
-    </button>
-    <button class="nav-btn" id="nav-leaderboard" onclick="showTab('leaderboard')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-      </svg>
-      Board
-    </button>
-    <button class="nav-btn" id="nav-stats" onclick="showTab('stats')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-      </svg>
-      Stats
-    </button>
-  </nav>
-
 </div>
 
-<!-- ===================== OVERLAYS ===================== -->
-<div class="overlay" id="overlay-scramble" onclick="closeOverlay('overlay-scramble')">
+<!-- ═══════════════════════════ PLAY ════════════════════════════ -->
+<div id="s-play" class="screen">
+  <div class="play-topbar">
+    <div class="play-left">
+      <div class="play-holenum" id="play-holenum">1</div>
+      <div class="play-meta-col">
+        <div class="play-round-lbl" id="play-round-lbl">Own Ball</div>
+        <div class="play-meta">
+          <div class="par-pill" id="play-par">Par 4</div>
+          <div class="meta-yds" id="play-yds">385 yds</div>
+          <div class="meta-hcp" id="play-hcp">· HCP 9</div>
+        </div>
+      </div>
+    </div>
+    <div class="progress-strip" id="progress-strip"></div>
+  </div>
+
+  <div class="play-canvas" id="play-canvas">
+    <div id="hole-svg-wrap"></div>
+
+    <div class="score-panel">
+      <div class="focus-card" id="focus-card">
+        <div class="fc-name"><div class="fc-dot" id="fc-dot"></div><span id="fc-pname">Player</span></div>
+        <div class="fc-score-wrap">
+          <button class="score-adj-btn score-adj-minus" onclick="adj(-1)">−</button>
+          <div class="score-num-block">
+            <span class="score-big" id="score-big">—</span>
+            <div class="score-lbl" id="score-lbl"></div>
+          </div>
+          <button class="score-adj-btn score-adj-plus" onclick="adj(1)">+</button>
+        </div>
+        <div class="fc-stats" id="fc-stats"></div>
+      </div>
+      <div class="player-switcher" id="player-switcher"></div>
+    </div>
+  </div>
+
+  <div class="hole-nav">
+    <button class="hn-btn" id="btn-prev" onclick="prevHole()">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/></svg>Prev
+    </button>
+    <div class="hn-mid" onclick="showTab('card')">
+      <svg class="hn-mid-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+      <span>Scorecard</span>
+    </div>
+    <button class="hn-btn" id="btn-next" onclick="nextHole()">
+      Next<svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ SCORECARD ════════════════════════ -->
+<div id="s-card" class="screen scrollable">
+  <div class="screen-head">
+    <div><h2>Scorecard</h2><p id="sc-sublbl">18-Hole Own Ball</p></div>
+    <button class="btn btn-ghost btn-sm" onclick="showTab('play')">← Play</button>
+  </div>
+  <div id="sc-body"></div>
+</div>
+
+<!-- ═══════════════════════════ LEADERBOARD ══════════════════════ -->
+<div id="s-lb" class="screen scrollable">
+  <div class="screen-head"><div><h2>Board</h2><p>Live standings</p></div></div>
+  <div id="lb-body"></div>
+</div>
+
+<!-- ═══════════════════════════ STATS ════════════════════════════ -->
+<div id="s-stats" class="screen scrollable">
+  <div class="screen-head"><div><h2>Stats</h2><p>Hole-by-hole breakdown</p></div></div>
+  <div id="stats-body"></div>
+</div>
+
+<!-- ═══════════════════════════ BOTTOM NAV ═══════════════════════ -->
+<nav id="bnav">
+  <button class="nb active" id="nb-home" onclick="showTab('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </button>
+  <button class="nb" id="nb-play" onclick="showTab('play')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>
+    Play
+  </button>
+  <button class="nb" id="nb-card" onclick="showTab('card')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+    Card
+  </button>
+  <button class="nb" id="nb-lb" onclick="showTab('lb')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Board
+  </button>
+  <button class="nb" id="nb-stats" onclick="showTab('stats')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Stats
+  </button>
+</nav>
+
+</div><!-- #app -->
+
+<!-- ═══════════════════════════ SCRAMBLE OVERLAY ═════════════════ -->
+<div class="overlay" id="ov-scramble" onclick="closeOverlay('ov-scramble')">
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
     <div class="sheet-title">Scramble Setup</div>
-    <div class="team-setup-form">
-      <div class="fg" style="margin-bottom:12px">
-        <label>Play which 9?</label>
-        <select id="scramble-nine">
-          <option value="front">Front 9 (Holes 1–9)</option>
-          <option value="back">Back 9 (Holes 10–18)</option>
-        </select>
+    <div class="sheet-body">
+      <div class="fg" style="margin-bottom:14px"><label>Play which 9?</label>
+        <select id="sc-nine"><option value="front">Front 9 (Holes 1–9)</option><option value="back">Back 9 (Holes 10–18)</option></select>
       </div>
-      <div id="team-list-sheet"></div>
-      <div style="background:var(--bg3);border-radius:10px;border:1px solid var(--border);padding:14px;margin-bottom:12px">
-        <div class="fg" style="margin-bottom:8px">
-          <label>Team Name</label>
-          <input type="text" id="t-name" placeholder="e.g. Team Eagle" maxlength="20">
-        </div>
-        <div class="form-row" style="margin-bottom:10px">
-          <div class="fg" style="flex:1">
-            <label>Player 1</label>
-            <select id="t-p1"></select>
-          </div>
-          <div class="fg" style="flex:1">
-            <label>Player 2</label>
-            <select id="t-p2"></select>
-          </div>
+      <div id="team-list-sheet" style="margin-bottom:12px"></div>
+      <div style="background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px">
+        <div class="fg" style="margin-bottom:10px"><label>Team Name</label><input type="text" id="t-name" placeholder="e.g. Team Eagle" maxlength="20"></div>
+        <div class="frow" style="margin-bottom:10px">
+          <div class="fg" style="flex:1"><label>Player 1</label><select id="t-p1"></select></div>
+          <div class="fg" style="flex:1"><label>Player 2</label><select id="t-p2"></select></div>
         </div>
         <button class="btn btn-outline btn-sm" onclick="addTeam()">+ Add Team</button>
       </div>
-      <button class="btn btn-gold" style="width:100%" onclick="startScramble()">Start Scramble →</button>
+      <button class="btn btn-red" style="width:100%;padding:14px;font-size:.9rem" onclick="startScramble()">Start Scramble →</button>
     </div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// COURSE DATA
-// ============================================================
+// ═══════════════════ COURSE DATA ═══════════════════
 const DEFAULT_COURSE = {
-  name: "Maumee Bay State Park Golf Course",
   holes: [
-    {number:1,  par:4, handicap:9,  yards:{blue:391,white:370,gold:348,red:303}, shape:'slight-right', water:false, bunkers:2},
-    {number:2,  par:4, handicap:13, yards:{blue:367,white:347,gold:321,red:278}, shape:'dogleg-left',  water:true,  bunkers:1},
-    {number:3,  par:3, handicap:17, yards:{blue:182,white:162,gold:143,red:122}, shape:'par3',         water:false, bunkers:1},
-    {number:4,  par:5, handicap:5,  yards:{blue:519,white:499,gold:469,red:432}, shape:'dogleg-right', water:false, bunkers:2},
-    {number:5,  par:4, handicap:1,  yards:{blue:424,white:404,gold:374,red:334}, shape:'straight',     water:true,  bunkers:2},
-    {number:6,  par:4, handicap:11, yards:{blue:372,white:352,gold:326,red:282}, shape:'dogleg-left',  water:false, bunkers:1},
-    {number:7,  par:3, handicap:15, yards:{blue:168,white:150,gold:132,red:112}, shape:'par3',         water:true,  bunkers:1},
-    {number:8,  par:4, handicap:7,  yards:{blue:398,white:378,gold:353,red:308}, shape:'slight-right', water:false, bunkers:2},
-    {number:9,  par:5, handicap:3,  yards:{blue:527,white:507,gold:477,red:441}, shape:'dogleg-left',  water:false, bunkers:2},
-    {number:10, par:4, handicap:10, yards:{blue:384,white:364,gold:338,red:294}, shape:'straight',     water:false, bunkers:1},
-    {number:11, par:4, handicap:6,  yards:{blue:418,white:398,gold:368,red:328}, shape:'dogleg-right', water:true,  bunkers:2},
-    {number:12, par:5, handicap:2,  yards:{blue:532,white:512,gold:482,red:447}, shape:'slight-left',  water:false, bunkers:3},
-    {number:13, par:3, handicap:16, yards:{blue:172,white:156,gold:137,red:117}, shape:'par3',         water:false, bunkers:1},
-    {number:14, par:4, handicap:8,  yards:{blue:403,white:383,gold:358,red:313}, shape:'dogleg-left',  water:true,  bunkers:2},
-    {number:15, par:4, handicap:4,  yards:{blue:417,white:397,gold:367,red:327}, shape:'dogleg-right', water:false, bunkers:2},
-    {number:16, par:3, handicap:18, yards:{blue:158,white:142,gold:123,red:103}, shape:'par3',         water:true,  bunkers:1},
-    {number:17, par:4, handicap:14, yards:{blue:376,white:356,gold:330,red:287}, shape:'straight',     water:false, bunkers:1},
-    {number:18, par:5, handicap:12, yards:{blue:521,white:501,gold:471,red:436}, shape:'dogleg-right', water:true,  bunkers:2},
+    {n:1,  par:4, hcp:9,  yds:{blue:391,white:370,gold:348,red:303}, shape:'slight-right', water:false, bunkers:2},
+    {n:2,  par:4, hcp:13, yds:{blue:367,white:347,gold:321,red:278}, shape:'dogleg-left',  water:true,  bunkers:1},
+    {n:3,  par:3, hcp:17, yds:{blue:182,white:162,gold:143,red:122}, shape:'par3',         water:false, bunkers:1},
+    {n:4,  par:5, hcp:5,  yds:{blue:519,white:499,gold:469,red:432}, shape:'dogleg-right', water:false, bunkers:2},
+    {n:5,  par:4, hcp:1,  yds:{blue:424,white:404,gold:374,red:334}, shape:'straight',     water:true,  bunkers:2},
+    {n:6,  par:4, hcp:11, yds:{blue:372,white:352,gold:326,red:282}, shape:'dogleg-left',  water:false, bunkers:1},
+    {n:7,  par:3, hcp:15, yds:{blue:168,white:150,gold:132,red:112}, shape:'par3',         water:true,  bunkers:1},
+    {n:8,  par:4, hcp:7,  yds:{blue:398,white:378,gold:353,red:308}, shape:'slight-right', water:false, bunkers:2},
+    {n:9,  par:5, hcp:3,  yds:{blue:527,white:507,gold:477,red:441}, shape:'dogleg-left',  water:false, bunkers:2},
+    {n:10, par:4, hcp:10, yds:{blue:384,white:364,gold:338,red:294}, shape:'straight',     water:false, bunkers:1},
+    {n:11, par:4, hcp:6,  yds:{blue:418,white:398,gold:368,red:328}, shape:'dogleg-right', water:true,  bunkers:2},
+    {n:12, par:5, hcp:2,  yds:{blue:532,white:512,gold:482,red:447}, shape:'slight-left',  water:false, bunkers:3},
+    {n:13, par:3, hcp:16, yds:{blue:172,white:156,gold:137,red:117}, shape:'par3',         water:false, bunkers:1},
+    {n:14, par:4, hcp:8,  yds:{blue:403,white:383,gold:358,red:313}, shape:'dogleg-left',  water:true,  bunkers:2},
+    {n:15, par:4, hcp:4,  yds:{blue:417,white:397,gold:367,red:327}, shape:'dogleg-right', water:false, bunkers:2},
+    {n:16, par:3, hcp:18, yds:{blue:158,white:142,gold:123,red:103}, shape:'par3',         water:true,  bunkers:1},
+    {n:17, par:4, hcp:14, yds:{blue:376,white:356,gold:330,red:287}, shape:'straight',     water:false, bunkers:1},
+    {n:18, par:5, hcp:12, yds:{blue:521,white:501,gold:471,red:436}, shape:'dogleg-right', water:true,  bunkers:2},
   ]
 };
 
-// ============================================================
-// STATE
-// ============================================================
-let state = {
-  players: [],
-  scores: {},          // [playerId][holeNum] = {score,putts,gir,fir}
-  scrambleTeams: [],
-  scrambleScores: {},  // [teamId][holeNum] = score
-  activeRound: null,   // 'own18' | 'scramble'
-  scrambleNine: 'front',
-  activeHole: 1,
+// ═══════════════════ STATE ═══════════════════
+let S = {
+  players:[],
+  scores:{},
+  scrambleTeams:[], scrambleScores:{},
+  round:null,       // 'own18' | 'scramble'
+  scrambleNine:'front',
+  hole:1,
+  focusIdx:0,       // which player is focused
   course: JSON.parse(JSON.stringify(DEFAULT_COURSE)),
 };
+const COLORS = ['#e31937','#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899','#06b6d4','#84cc16'];
+let cIdx = 0;
 
-const PLAYER_COLORS = ['#c9a84c','#52b788','#93c5fd','#a78bfa','#f87171','#fb923c','#34d399','#f9a8d4'];
-let colorIdx = 0;
-
-function save() { try { localStorage.setItem('maumee-v2', JSON.stringify(state)); } catch(e){} }
-function load() {
-  try {
-    const raw = localStorage.getItem('maumee-v2');
-    if (raw) {
-      const s = JSON.parse(raw);
-      state = {...state, ...s};
-      if (!state.course?.holes) state.course = JSON.parse(JSON.stringify(DEFAULT_COURSE));
-    }
-  } catch(e){}
+function save(){ try{ localStorage.setItem('mb3', JSON.stringify(S)); }catch(e){} }
+function load(){
+  try{
+    const r = localStorage.getItem('mb3');
+    if(r){ const d=JSON.parse(r); S={...S,...d}; if(!S.course?.holes) S.course=JSON.parse(JSON.stringify(DEFAULT_COURSE)); }
+  }catch(e){}
 }
 
-// ============================================================
-// NAV
-// ============================================================
-const TABS = ['home','play','scorecard','leaderboard','stats'];
-let currentTab = 'home';
+// ═══════════════════ NAV ═══════════════════
+const TABS = {home:'s-home',play:'s-play',card:'s-card',lb:'s-lb',stats:'s-stats'};
+let curTab = 'home';
 
-function showTab(name) {
-  if (!TABS.includes(name)) return;
-  currentTab = name;
-  TABS.forEach(t => {
-    document.getElementById('screen-'+t).classList.toggle('active', t===name);
-    const nb = document.getElementById('nav-'+t);
-    if (nb) nb.classList.toggle('active', t===name);
+function showTab(t){
+  if(!TABS[t]) return;
+  curTab = t;
+  Object.keys(TABS).forEach(k=>{
+    document.getElementById(TABS[k]).classList.toggle('active', k===t);
+    const nb = document.getElementById('nb-'+k);
+    if(nb) nb.classList.toggle('active', k===t);
   });
-  if (name==='play') renderPlayScreen();
-  if (name==='scorecard') renderScorecard();
-  if (name==='leaderboard') renderLeaderboard();
-  if (name==='stats') renderStats();
+  if(t==='play')   renderPlay();
+  if(t==='card')   renderCard();
+  if(t==='lb')     renderLB();
+  if(t==='stats')  renderStats();
 }
 
-// ============================================================
-// PLAYERS
-// ============================================================
-function addPlayer() {
+// ═══════════════════ PLAYERS ═══════════════════
+function initials(n){ return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+
+function addPlayer(){
   const name = document.getElementById('p-name').value.trim();
-  if (!name) { document.getElementById('p-name').focus(); return; }
-  const hcp = parseInt(document.getElementById('p-hcp').value)||0;
-  const tee = document.getElementById('p-tee').value;
-  const color = document.getElementById('p-color').value || PLAYER_COLORS[colorIdx % PLAYER_COLORS.length];
-  colorIdx++;
-  const id = 'p'+Date.now();
-  state.players.push({id, name, handicap:hcp, tee, color});
-  state.scores[id] = {};
+  if(!name){ document.getElementById('p-name').focus(); return; }
+  const hcp   = parseInt(document.getElementById('p-hcp').value)||0;
+  const tee   = document.getElementById('p-tee').value;
+  const color = document.getElementById('p-color').value || COLORS[cIdx%COLORS.length];
+  cIdx++;
+  const id='p'+Date.now();
+  S.players.push({id,name,hcp,tee,color});
+  S.scores[id]={};
   document.getElementById('p-name').value='';
-  save();
-  renderPlayerListHome();
-  // cycle color suggestion
-  document.getElementById('p-color').value = PLAYER_COLORS[colorIdx % PLAYER_COLORS.length];
+  document.getElementById('p-color').value = COLORS[cIdx%COLORS.length];
+  save(); renderPlayerList();
 }
 
-function removePlayer(id) {
-  state.players = state.players.filter(p=>p.id!==id);
-  delete state.scores[id];
-  save();
-  renderPlayerListHome();
+function removePlayer(id){
+  S.players = S.players.filter(p=>p.id!==id);
+  delete S.scores[id];
+  save(); renderPlayerList();
 }
 
-function initials(name) {
-  return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+function renderPlayerList(){
+  const el=document.getElementById('player-list');
+  if(!S.players.length){ el.innerHTML='<div class="empty" style="padding:16px 0">Add players to get started</div>'; return; }
+  el.innerHTML = S.players.map(p=>`
+    <div class="player-row">
+      <div class="av" style="background:${p.color}22;color:${p.color}">${initials(p.name)}</div>
+      <div class="pi"><strong>${p.name}</strong><span>HCP ${p.hcp}<span class="tee-pill tee-${p.tee}">${p.tee}</span></span></div>
+      <button class="btn btn-kill" onclick="removePlayer('${p.id}')">✕</button>
+    </div>`).join('');
 }
 
-function renderPlayerListHome() {
-  const el = document.getElementById('player-list-home');
-  if (!state.players.length) {
-    el.innerHTML = '<div class="empty" style="padding:20px 0">Add players to get started</div>';
-    return;
-  }
-  el.innerHTML = state.players.map(p=>`
-    <div class="player-card-home fade-up">
-      <div class="player-avatar" style="background:${p.color}22;color:${p.color}">${initials(p.name)}</div>
-      <div class="player-info">
-        <strong>${p.name}</strong>
-        <span>HCP ${p.handicap} <span class="player-tee-badge tee-${p.tee}">${p.tee}</span></span>
-      </div>
-      <button class="btn btn-danger" onclick="removePlayer('${p.id}')">✕</button>
-    </div>
-  `).join('');
+// ═══════════════════ ROUND START ═══════════════════
+function startRound(type){
+  if(!S.players.length){ alert('Add at least one player first.'); return; }
+  S.round=type; S.hole=1; S.focusIdx=0; save(); showTab('play');
 }
 
-// ============================================================
-// ROUND START
-// ============================================================
-function startRound(type) {
-  if (!state.players.length) { alert('Add at least one player first.'); return; }
-  state.activeRound = type;
-  state.activeHole = 1;
-  save();
-  showTab('play');
+function openScrambleSetup(){
+  if(!S.players.length){ alert('Add players first.'); return; }
+  const opts='<option value="">—</option>'+S.players.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  document.getElementById('t-p1').innerHTML=opts;
+  document.getElementById('t-p2').innerHTML=opts;
+  renderTeamSheet();
+  document.getElementById('ov-scramble').classList.add('open');
 }
+function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
 
-function openScrambleSetup() {
-  if (!state.players.length) { alert('Add at least one player first.'); return; }
-  // populate player selects
-  const opts = '<option value="">—</option>' + state.players.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
-  document.getElementById('t-p1').innerHTML = opts;
-  document.getElementById('t-p2').innerHTML = opts;
-  renderTeamListSheet();
-  document.getElementById('overlay-scramble').classList.add('open');
+function addTeam(){
+  const name=document.getElementById('t-name').value.trim()||'Team '+(S.scrambleTeams.length+1);
+  const p1=document.getElementById('t-p1').value, p2=document.getElementById('t-p2').value;
+  const players=[p1,p2].filter(Boolean);
+  if(!players.length) return;
+  const id='t'+Date.now();
+  S.scrambleTeams.push({id,name,players}); S.scrambleScores[id]={};
+  document.getElementById('t-name').value=''; save(); renderTeamSheet();
 }
-
-function addTeam() {
-  const name = document.getElementById('t-name').value.trim() || 'Team '+(state.scrambleTeams.length+1);
-  const p1 = document.getElementById('t-p1').value;
-  const p2 = document.getElementById('t-p2').value;
-  const players = [p1,p2].filter(Boolean);
-  if (!players.length) return;
-  const id = 't'+Date.now();
-  state.scrambleTeams.push({id, name, players});
-  state.scrambleScores[id] = {};
-  document.getElementById('t-name').value='';
-  save();
-  renderTeamListSheet();
+function removeTeam(id){
+  S.scrambleTeams=S.scrambleTeams.filter(t=>t.id!==id); delete S.scrambleScores[id]; save(); renderTeamSheet();
 }
-
-function renderTeamListSheet() {
-  const el = document.getElementById('team-list-sheet');
-  if (!state.scrambleTeams.length) { el.innerHTML=''; return; }
-  el.innerHTML = state.scrambleTeams.map(t=>{
-    const names = t.players.map(id=>state.players.find(p=>p.id===id)?.name||'?').join(' & ');
-    return `<div class="team-card">
-      <div><strong>${t.name}</strong><span>${names}</span></div>
-      <button class="btn btn-danger" onclick="removeTeam('${t.id}')">✕</button>
-    </div>`;
+function renderTeamSheet(){
+  const el=document.getElementById('team-list-sheet');
+  el.innerHTML=S.scrambleTeams.map(t=>{
+    const names=t.players.map(id=>S.players.find(p=>p.id===id)?.name||'?').join(' & ');
+    return `<div class="team-card"><div><strong>${t.name}</strong><span>${names}</span></div><button class="btn btn-kill" onclick="removeTeam('${t.id}')">✕</button></div>`;
   }).join('');
 }
-
-function removeTeam(id) {
-  state.scrambleTeams = state.scrambleTeams.filter(t=>t.id!==id);
-  delete state.scrambleScores[id];
-  save();
-  renderTeamListSheet();
+function startScramble(){
+  S.scrambleNine=document.getElementById('sc-nine').value;
+  S.round='scramble'; S.focusIdx=0;
+  S.hole = S.scrambleNine==='back'?10:1;
+  closeOverlay('ov-scramble'); save(); showTab('play');
 }
 
-function startScramble() {
-  state.scrambleNine = document.getElementById('scramble-nine').value;
-  state.activeRound = 'scramble';
-  state.activeHole = state.scrambleNine==='front' ? 1 : 10;
-  closeOverlay('overlay-scramble');
-  save();
-  showTab('play');
-}
+// ═══════════════════ HOLE SVG ═══════════════════
+function makeHoleSVG(h, tee='white'){
+  const W=430, H=h.par===3?340:h.par===5?520:430;
+  const s=h.shape||'straight';
 
-function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
+  const roughBg='#060910', roughFg='#0c1020';
+  const fwFar='#152e24', fwMid='#1e5038', fwNear='#276848';
+  const grnOuter='#195c38', grnInner='#22875a', grnHigh='#2ebd7e';
+  const bkr='#c4a25e', bkrHigh='#dbbf7a';
+  const wtrDeep='#030e18', wtrMid='#082540', wtrShine='#155070';
+  const teeClr='#1a4232';
 
-// ============================================================
-// HOLE ILLUSTRATION SVG
-// ============================================================
-function makeHoleSVG(h) {
-  const W = 400, H = h.par===3 ? 180 : h.par===5 ? 320 : 260;
-  const shape = h.shape || 'straight';
-  const isPar3 = h.par===3;
+  // Fairway paths — taller SVG so tee at bottom, green at top
+  let fw='', gx=W/2, gy=44;
 
-  // Colors — atmospheric, deep
-  const roughFar  = '#0e1e0e';
-  const roughMid  = '#142614';
-  const roughNear = '#1a2e1a';
-  const fairwayFar  = '#2d6a4f';
-  const fairwayMid  = '#40916c';
-  const fairwayNear = '#52b788';
-  const greenClr  = '#74c69d';
-  const greenHigh = '#95d5b2';
-  const waterDeep = '#0a2a3a';
-  const waterShine= '#1a6b8a';
-  const bunkerClr = '#c4a76b';
-  const skyTop    = '#06091a';
-  const skyHorizon= '#0e1530';
-  const teeClr    = '#40916c';
-  const flagPole  = '#e8e8e8';
-  const flagCloth = '#ef4444';
-
-  // Build fairway path based on shape
-  let fw = '';
-  let greenX = W/2, greenY = 36;
-
-  if (isPar3) {
-    fw = `M${W*0.38},${H-28} L${W*0.62},${H-28} C${W*0.62},${H*0.25} ${W*0.6},${H*0.18} ${W*0.54},${H*0.14}
-          C${W*0.5},${H*0.12} ${W*0.5},${H*0.12} ${W*0.46},${H*0.14}
-          C${W*0.4},${H*0.18} ${W*0.38},${H*0.25} ${W*0.38},${H-28} Z`;
-    greenX = W/2; greenY = H*0.14;
-  } else if (shape==='straight') {
-    fw = `M${W*0.4},${H-30} L${W*0.6},${H-30} C${W*0.61},${H*0.2} ${W*0.58},${H*0.12} ${W*0.54},${H*0.1}
-          C${W*0.51},${H*0.08} ${W*0.49},${H*0.08} ${W*0.46},${H*0.1}
-          C${W*0.42},${H*0.12} ${W*0.39},${H*0.2} ${W*0.4},${H-30} Z`;
-    greenX = W/2; greenY = H*0.1;
-  } else if (shape==='dogleg-left') {
-    fw = `M${W*0.42},${H-30} L${W*0.62},${H-30} L${W*0.62},${H*0.55} C${W*0.62},${H*0.48} ${W*0.58},${H*0.44} ${W*0.5},${H*0.42}
-          C${W*0.3},${H*0.4} ${W*0.25},${H*0.36} ${W*0.22},${H*0.28} C${W*0.2},${H*0.22} ${W*0.2},${H*0.16} ${W*0.22},${H*0.12}
-          C${W*0.26},${H*0.08} ${W*0.32},${H*0.08} ${W*0.36},${H*0.1} C${W*0.4},${H*0.12} ${W*0.42},${H*0.18} ${W*0.44},${H*0.42}
-          L${W*0.5},${H*0.44} C${W*0.42},${H*0.46} ${W*0.42},${H*0.52} ${W*0.42},${H-30} Z`;
-    greenX = W*0.28; greenY = H*0.1;
-  } else if (shape==='dogleg-right') {
-    fw = `M${W*0.38},${H-30} L${W*0.58},${H-30} L${W*0.58},${H*0.52} C${W*0.58},${H*0.46} ${W*0.62},${H*0.42} ${W*0.7},${H*0.4}
-          C${W*0.78},${H*0.38} ${W*0.8},${H*0.32} ${W*0.78},${H*0.24} C${W*0.76},${H*0.14} ${W*0.7},${H*0.1} ${W*0.64},${H*0.1}
-          C${W*0.58},${H*0.1} ${W*0.54},${H*0.14} ${W*0.52},${H*0.2} C${W*0.5},${H*0.26} ${W*0.5},${H*0.38} ${W*0.56},${H*0.4}
-          C${W*0.5},${H*0.44} ${W*0.46},${H*0.48} ${W*0.44},${H*0.52} L${W*0.44},${H-30} Z`;
-    greenX = W*0.64; greenY = H*0.11;
-  } else if (shape==='slight-left') {
-    fw = `M${W*0.4},${H-30} L${W*0.62},${H-30} C${W*0.6},${H*0.2} ${W*0.54},${H*0.1} ${W*0.44},${H*0.08}
-          C${W*0.4},${H*0.07} ${W*0.36},${H*0.08} ${W*0.33},${H*0.1}
-          C${W*0.3},${H*0.14} ${W*0.32},${H*0.22} ${W*0.38},${H-30} Z`;
-    greenX = W*0.38; greenY = H*0.09;
+  if(s==='par3'){
+    fw=`M${W*.37},${H-30} L${W*.63},${H-30} C${W*.64},${H*.25} ${W*.62},${H*.13} ${W*.55},${H*.1} C${W*.52},${H*.08} ${W*.48},${H*.08} ${W*.45},${H*.1} C${W*.38},${H*.13} ${W*.36},${H*.25} ${W*.37},${H-30}Z`;
+    gx=W/2; gy=H*.1;
+  } else if(s==='straight'){
+    fw=`M${W*.41},${H-30} L${W*.59},${H-30} C${W*.6},${H*.2} ${W*.58},${H*.1} ${W*.54},${H*.08} C${W*.52},${H*.07} ${W*.48},${H*.07} ${W*.46},${H*.08} C${W*.42},${H*.1} ${W*.4},${H*.2} ${W*.41},${H-30}Z`;
+    gx=W/2; gy=H*.09;
+  } else if(s==='dogleg-left'){
+    fw=`M${W*.44},${H-30} L${W*.62},${H-30} L${W*.62},${H*.52} C${W*.62},${H*.45} ${W*.57},${H*.41} ${W*.49},${H*.39} L${W*.33},${H*.39} C${W*.23},${H*.39} ${W*.2},${H*.33} ${W*.2},${H*.26} C${W*.2},${H*.16} ${W*.27},${H*.09} ${W*.35},${H*.09} C${W*.43},${H*.09} ${W*.47},${H*.16} ${W*.47},${H*.26} L${W*.47},${H*.39} C${W*.38},${H*.41} ${W*.37},${H*.47} ${W*.37},${H*.54} L${W*.44},${H*.56} L${W*.44},${H-30}Z`;
+    gx=W*.28; gy=H*.1;
+  } else if(s==='dogleg-right'){
+    fw=`M${W*.38},${H-30} L${W*.56},${H-30} L${W*.56},${H*.54} C${W*.56},${H*.47} ${W*.61},${H*.41} ${W*.71},${H*.39} L${W*.79},${H*.39} C${W*.81},${H*.39} ${W*.8},${H*.29} ${W*.76},${H*.21} C${W*.72},${H*.13} ${W*.64},${H*.09} ${W*.58},${H*.09} C${W*.5},${H*.09} ${W*.46},${H*.15} ${W*.45},${H*.25} L${W*.45},${H*.39} C${W*.38},${H*.41} ${W*.37},${H*.47} ${W*.37},${H*.54} L${W*.44},${H*.57}Z`;
+    gx=W*.64; gy=H*.11;
+  } else if(s==='slight-left'){
+    fw=`M${W*.42},${H-30} L${W*.6},${H-30} C${W*.59},${H*.2} ${W*.54},${H*.09} ${W*.43},${H*.07} C${W*.39},${H*.06} ${W*.34},${H*.07} ${W*.31},${H*.1} C${W*.28},${H*.13} ${W*.3},${H*.2} ${W*.38},${H-30}Z`;
+    gx=W*.37; gy=H*.09;
   } else { // slight-right
-    fw = `M${W*0.38},${H-30} L${W*0.6},${H-30} C${W*0.62},${H*0.22} ${W*0.64},${H*0.12} ${W*0.66},${H*0.08}
-          C${W*0.66},${H*0.07} ${W*0.63},${H*0.07} ${W*0.6},${H*0.09}
-          C${W*0.55},${H*0.11} ${W*0.5},${H*0.2} ${W*0.4},${H-30} Z`;
-    greenX = W*0.62; greenY = H*0.09;
+    fw=`M${W*.4},${H-30} L${W*.58},${H-30} C${W*.6},${H*.2} ${W*.63},${H*.09} ${W*.66},${H*.07} C${W*.65},${H*.06} ${W*.62},${H*.07} ${W*.59},${H*.09} C${W*.54},${H*.12} ${W*.5},${H*.2} ${W*.42},${H-30}Z`;
+    gx=W*.62; gy=H*.09;
   }
 
-  // Green radius
-  const gr = isPar3 ? 28 : h.par===5 ? 36 : 30;
+  const gr = h.par===3?28:h.par===5?34:30;
+  const id='h'+h.n;
 
-  // Bunker positions (relative to green)
-  const bunkerPositions = [
-    [greenX - gr*1.6, greenY + gr*0.8],
-    [greenX + gr*1.5, greenY + gr*0.6],
-    [greenX - gr*0.5, greenY - gr*1.8],
-  ].slice(0, Math.min(h.bunkers||1, 3));
+  // Yardage markers (dashed rings across fairway)
+  const yTee=H-30, yGreen=gy;
+  const y100=yGreen+(yTee-yGreen)*.28;
+  const y150=yGreen+(yTee-yGreen)*.5;
+  const y200=yGreen+(yTee-yGreen)*.72;
 
-  // Water position
-  const waterX = shape==='dogleg-left' ? W*0.15 : W*0.78;
-  const waterY = H*0.38;
+  // bunker positions
+  const bArr=[
+    [gx-gr*1.8, gy+gr, gr, gr*.42],
+    [gx+gr*1.7, gy+gr*.8, gr*.9, gr*.38],
+    [gx, gy-gr*2.1, gr*.75, gr*.32],
+  ].slice(0,Math.min(h.bunkers,3));
 
-  // Sky/atmosphere gradient ID
-  const gid = `g${h.number}`;
+  // water position
+  const wx = s==='dogleg-left'?W*.15:s==='dogleg-right'?W*.78:W*.82;
+  const wy = H*.42;
 
-  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%">
-    <defs>
-      <linearGradient id="${gid}sky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${skyTop}"/>
-        <stop offset="100%" stop-color="${skyHorizon}"/>
-      </linearGradient>
-      <radialGradient id="${gid}green" cx="50%" cy="40%" r="60%">
-        <stop offset="0%" stop-color="${greenHigh}"/>
-        <stop offset="100%" stop-color="${greenClr}"/>
-      </radialGradient>
-      <radialGradient id="${gid}fw" cx="50%" cy="60%" r="70%">
-        <stop offset="0%" stop-color="${fairwayMid}"/>
-        <stop offset="100%" stop-color="${fairwayFar}"/>
-      </radialGradient>
-      <linearGradient id="${gid}rough" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${roughFar}"/>
-        <stop offset="60%" stop-color="${roughMid}"/>
-        <stop offset="100%" stop-color="${roughNear}"/>
-      </linearGradient>
-      <filter id="${gid}glow">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-      </filter>
-      <filter id="${gid}softglow">
-        <feGaussianBlur stdDeviation="6" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
+  // Yds display
+  const yardage = h.yds[tee]||h.yds.white;
 
-    <!-- Sky / background -->
-    <rect width="${W}" height="${H}" fill="url(#${gid}rough)"/>
-    <rect width="${W}" height="${H*0.45}" fill="url(#${gid}sky)" opacity="0.8"/>
-
-    <!-- Atmospheric haze at horizon -->
-    <ellipse cx="${W/2}" cy="${H*0.32}" rx="${W*0.6}" ry="${H*0.08}" fill="${fairwayFar}" opacity="0.15"/>
-
-    <!-- Fairway -->
-    <path d="${fw}" fill="url(#${gid}fw)" opacity="0.9"/>
-
-    <!-- Water hazard -->
-    ${h.water ? `
-      <ellipse cx="${waterX}" cy="${waterY}" rx="${W*0.1}" ry="${H*0.05}" fill="${waterDeep}" opacity="0.9"/>
-      <ellipse cx="${waterX}" cy="${waterY}" rx="${W*0.07}" ry="${H*0.025}" fill="${waterShine}" opacity="0.5"/>
-      <ellipse cx="${waterX+W*0.015}" cy="${waterY-H*0.008}" rx="${W*0.03}" ry="${H*0.008}" fill="rgba(255,255,255,0.15)"/>
-    ` : ''}
-
-    <!-- Bunkers -->
-    ${bunkerPositions.map(([bx,by])=>`
-      <ellipse cx="${bx}" cy="${by}" rx="${gr*0.8}" ry="${gr*0.4}" fill="${bunkerClr}" opacity="0.85"/>
-      <ellipse cx="${bx}" cy="${by}" rx="${gr*0.55}" ry="${gr*0.25}" fill="${bunkerClr}" opacity="0.4"/>
-    `).join('')}
-
-    <!-- Green with glow -->
-    <circle cx="${greenX}" cy="${greenY}" r="${gr*1.15}" fill="${greenClr}" opacity="0.3" filter="url(#${gid}softglow)"/>
-    <circle cx="${greenX}" cy="${greenY}" r="${gr}" fill="url(#${gid}green)"/>
-    <circle cx="${greenX}" cy="${greenY}" r="${gr}" fill="none" stroke="${greenHigh}" stroke-width="1.5" opacity="0.6"/>
-    <!-- Green fringe -->
-    <circle cx="${greenX}" cy="${greenY}" r="${gr*1.18}" fill="none" stroke="${fairwayMid}" stroke-width="3" opacity="0.5"/>
-
-    <!-- Flag pole & flag -->
-    <line x1="${greenX}" y1="${greenY-gr*0.3}" x2="${greenX}" y2="${greenY-gr*1.9}" stroke="${flagPole}" stroke-width="1.5" opacity="0.9"/>
-    <polygon points="${greenX},${greenY-gr*1.9} ${greenX+gr*0.7},${greenY-gr*1.6} ${greenX},${greenY-gr*1.3}" fill="${flagCloth}"/>
-
-    <!-- Tee box -->
-    <rect x="${W/2-18}" y="${H-28}" width="36" height="14" rx="3" fill="${teeClr}" opacity="0.9"/>
-    <rect x="${W/2-14}" y="${H-26}" width="28" height="10" rx="2" fill="${fairwayNear}" opacity="0.5"/>
-
-    <!-- Distance lines (faint) -->
-    <line x1="${W*0.1}" y1="${H*0.33}" x2="${W*0.9}" y2="${H*0.33}" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 6"/>
-    <line x1="${W*0.1}" y1="${H*0.55}" x2="${W*0.9}" y2="${H*0.55}" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 6"/>
-
-    <!-- Vignette -->
-    <radialGradient id="${gid}vig" cx="50%" cy="50%" r="70%">
-      <stop offset="50%" stop-color="transparent"/>
-      <stop offset="100%" stop-color="rgba(0,0,0,0.5)"/>
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+  <defs>
+    <linearGradient id="${id}bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#030508"/><stop offset="100%" stop-color="#080c16"/>
+    </linearGradient>
+    <linearGradient id="${id}fw" x1=".5" y1="0" x2=".5" y2="1">
+      <stop offset="0%" stop-color="${fwFar}"/><stop offset="45%" stop-color="${fwMid}"/><stop offset="100%" stop-color="${fwNear}"/>
+    </linearGradient>
+    <radialGradient id="${id}grn" cx="38%" cy="32%" r="62%">
+      <stop offset="0%" stop-color="${grnHigh}"/><stop offset="55%" stop-color="${grnInner}"/><stop offset="100%" stop-color="${grnOuter}"/>
     </radialGradient>
-    <rect width="${W}" height="${H}" fill="url(#${gid}vig)"/>
+    <radialGradient id="${id}glw" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="${grnInner}" stop-opacity=".5"/><stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <radialGradient id="${id}wtr" cx="28%" cy="28%" r="72%">
+      <stop offset="0%" stop-color="${wtrMid}"/><stop offset="100%" stop-color="${wtrDeep}"/>
+    </radialGradient>
+    <radialGradient id="${id}vig" cx="50%" cy="50%" r="65%">
+      <stop offset="35%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,.75)"/>
+    </radialGradient>
+    <filter id="${id}glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="${id}softglow"><feGaussianBlur stdDeviation="10"/></filter>
+  </defs>
+
+  <!-- base -->
+  <rect width="${W}" height="${H}" fill="url(#${id}bg)"/>
+  <!-- rough texture -->
+  <rect width="${W}" height="${H}" fill="${roughFg}" opacity=".4"/>
+
+  <!-- subtle fairway stripe texture -->
+  <rect x="${W*.35}" y="0" width="${W*.3}" height="${H}" fill="${fwFar}" opacity=".07"/>
+
+  <!-- fairway -->
+  <path d="${fw}" fill="url(#${id}fw)" opacity=".94"/>
+
+  ${h.water?`
+  <!-- water hazard -->
+  <ellipse cx="${wx}" cy="${wy}" rx="${W*.1}" ry="${H*.05}" fill="url(#${id}wtr)" opacity=".96"/>
+  <ellipse cx="${wx-W*.018}" cy="${wy-H*.013}" rx="${W*.05}" ry="${H*.02}" fill="${wtrShine}" opacity=".5"/>
+  <ellipse cx="${wx+W*.022}" cy="${wy-H*.008}" rx="${W*.028}" ry="${H*.011}" fill="rgba(255,255,255,.13)"/>
+  `:''}
+
+  ${bArr.map(([bx,by,brx,bry])=>`
+  <ellipse cx="${bx}" cy="${by}" rx="${brx}" ry="${bry}" fill="${bkr}" opacity=".88"/>
+  <ellipse cx="${bx-.03*brx}" cy="${by-.1*bry}" rx="${brx*.58}" ry="${bry*.52}" fill="${bkrHigh}" opacity=".55"/>
+  `).join('')}
+
+  <!-- yardage reference lines with labels -->
+  ${h.par!==3?`
+  <line x1="${W*.1}" y1="${y200}" x2="${W*.9}" y2="${y200}" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="8 10"/>
+  <rect x="${W*.1-18}" y="${y200-9}" width="36" height="16" rx="4" fill="rgba(0,0,0,.55)"/>
+  <text x="${W*.1}" y="${y200+4}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="rgba(255,255,255,.5)">200</text>
+  `:''}
+  <line x1="${W*.1}" y1="${y150}" x2="${W*.9}" y2="${y150}" stroke="rgba(255,255,255,.11)" stroke-width="1" stroke-dasharray="8 10"/>
+  <rect x="${W*.1-18}" y="${y150-9}" width="36" height="16" rx="4" fill="rgba(0,0,0,.55)"/>
+  <text x="${W*.1}" y="${y150+4}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="rgba(255,255,255,.55)">150</text>
+  ${h.par!==3?`
+  <line x1="${W*.1}" y1="${y100}" x2="${W*.9}" y2="${y100}" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="8 10"/>
+  <rect x="${W*.1-18}" y="${y100-9}" width="36" height="16" rx="4" fill="rgba(0,0,0,.55)"/>
+  <text x="${W*.1}" y="${y100+4}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="rgba(255,255,255,.5)">100</text>
+  `:''}
+
+  <!-- green glow bloom -->
+  <circle cx="${gx}" cy="${gy}" r="${gr*3}" fill="url(#${id}glw)" filter="url(#${id}softglow)" opacity=".7"/>
+  <!-- green -->
+  <circle cx="${gx}" cy="${gy}" r="${gr}" fill="url(#${id}grn)"/>
+  <!-- green fringe ring -->
+  <circle cx="${gx}" cy="${gy}" r="${gr*1.22}" fill="none" stroke="${fwMid}" stroke-width="5" opacity=".45"/>
+  <circle cx="${gx}" cy="${gy}" r="${gr}" fill="none" stroke="${grnHigh}" stroke-width="1" opacity=".6"/>
+
+  <!-- flag pin -->
+  <line x1="${gx}" y1="${gy-gr*.2}" x2="${gx}" y2="${gy-gr*2.1}" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+  <polygon points="${gx},${gy-gr*2.1} ${gx+gr*.8},${gy-gr*1.75} ${gx},${gy-gr*1.4}" fill="#e31937"/>
+
+  <!-- tee box -->
+  <rect x="${W/2-18}" y="${H-32}" width="36" height="14" rx="4" fill="${teeClr}" opacity=".95"/>
+  <rect x="${W/2-12}" y="${H-29}" width="24" height="8" rx="2" fill="${fwNear}" opacity=".55"/>
+
+  <!-- GPS pin at green (yardage badge) -->
+  <g filter="url(#${id}glow)">
+    <circle cx="${gx+gr*1.9}" cy="${gy-gr*.2}" r="17" fill="rgba(4,6,15,.85)" stroke="rgba(46,189,126,.4)" stroke-width="1.2"/>
+    <text x="${gx+gr*1.9}" y="${gy-gr*.2+4}" text-anchor="middle" font-family="'Bebas Neue',Impact,sans-serif" font-size="14" fill="#2ebd7e" letter-spacing="0.5">${yardage}</text>
+  </g>
+
+  <!-- vignette -->
+  <rect width="${W}" height="${H}" fill="url(#${id}vig)"/>
   </svg>`;
 }
 
-// ============================================================
-// PLAY SCREEN
-// ============================================================
-function renderPlayScreen() {
-  if (!state.activeRound) {
-    // No round started yet - show prompt
-    document.getElementById('hole-illustration').innerHTML = `<div class="empty" style="padding:40px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a9 9 0 110 18A9 9 0 0112 2z"/><path d="M12 6v6l4 2"/></svg>Start a round from Home</div>`;
-    document.getElementById('scoring-area').innerHTML = '';
-    document.getElementById('hole-progress').innerHTML = '';
-    return;
-  }
+// ═══════════════════ PLAY SCREEN ═══════════════════
+function getHoles(){
+  if(S.round==='scramble')
+    return S.course.holes.filter(h=>S.scrambleNine==='back'?h.n>=10:h.n<=9);
+  return S.course.holes;
+}
+function getEntities(){
+  return S.round==='scramble' ? S.scrambleTeams : S.players;
+}
+function curEntity(){ return getEntities()[S.focusIdx]; }
 
-  const h = state.course.holes.find(x=>x.number===state.activeHole);
-  if (!h) return;
-
-  // Top bar
-  document.getElementById('play-round-label').textContent = state.activeRound==='scramble' ? '9-Hole Scramble' : '18-Hole Own Ball';
-  document.getElementById('play-hole-num').textContent = h.number;
-  document.getElementById('play-par-badge').textContent = 'Par '+h.par;
-
-  // Show yards based on first player's tee, or white by default
-  const tee = state.players[0]?.tee || 'white';
-  document.getElementById('play-yards').textContent = (h.yards[tee]||h.yards.white)+' yds';
-  document.getElementById('play-hcp').textContent = '· HCP '+h.handicap;
-
-  // Hole illustration
-  document.getElementById('hole-illustration').innerHTML = makeHoleSVG(h);
-
-  // Progress dots
-  const activeHoles = getActiveHoles();
-  document.getElementById('hole-progress').innerHTML = activeHoles.map(hn=>{
-    const hh = state.course.holes.find(x=>x.number===hn);
-    const isActive = hn===state.activeHole;
-    const isScored = isHoleScored(hn);
-    const dotClass = isActive ? 'hp-dot active' : isScored ? 'hp-dot scored '+getBestScoreClass(hn) : 'hp-dot';
-    return `<div class="${dotClass}" onclick="jumpToHole(${hn})">${hn}</div>`;
-  }).join('');
-
-  // Scoring cards
-  renderScoringCards(h);
-
-  // Nav buttons
-  const firstHole = activeHoles[0], lastHole = activeHoles[activeHoles.length-1];
-  document.getElementById('btn-prev-hole').disabled = (h.number <= firstHole);
-  document.getElementById('btn-next-hole').disabled = (h.number >= lastHole);
+function scoreOf(eid, hn){
+  if(S.round==='scramble') return S.scrambleScores[eid]?.[hn]||null;
+  return S.scores[eid]?.[hn]?.score||null;
 }
 
-function getActiveHoles() {
-  if (state.activeRound==='scramble') {
-    return state.activeRound==='scramble' && state.scrambleNine==='back'
-      ? [10,11,12,13,14,15,16,17,18]
-      : [1,2,3,4,5,6,7,8,9];
-  }
-  return state.course.holes.map(h=>h.number);
+function isHoleScored(hn){
+  return getEntities().some(e=>scoreOf(e.id,hn));
+}
+function bestDotClass(hn){
+  const h=S.course.holes.find(x=>x.n===hn);
+  if(!h) return '';
+  const scores=getEntities().map(e=>scoreOf(e.id,hn)).filter(Boolean);
+  if(!scores.length) return '';
+  const d=Math.min(...scores)-h.par;
+  if(d<=-2) return 'eagle-d';
+  if(d===-1) return 'birdie-d';
+  if(d===1) return 'bogey-d';
+  if(d>=2) return 'double-d';
+  return 'done';
 }
 
-function isHoleScored(hn) {
-  if (state.activeRound==='scramble') {
-    return state.scrambleTeams.some(t=>state.scrambleScores[t.id]?.[hn]);
-  }
-  return state.players.some(p=>state.scores[p.id]?.[hn]?.score);
-}
-
-function getBestScoreClass(hn) {
-  const h = state.course.holes.find(x=>x.number===hn);
-  if (!h) return '';
-  const scores = state.activeRound==='scramble'
-    ? state.scrambleTeams.map(t=>state.scrambleScores[t.id]?.[hn]).filter(Boolean)
-    : state.players.map(p=>state.scores[p.id]?.[hn]?.score).filter(Boolean);
-  if (!scores.length) return '';
-  const best = Math.min(...scores);
-  const diff = best - h.par;
-  if (diff<=-2) return 'eagle-dot';
-  if (diff===-1) return 'birdie-dot';
-  if (diff===0) return '';
-  if (diff===1) return 'bogey-dot';
-  return 'double-dot';
-}
-
-function renderScoringCards(h) {
-  const el = document.getElementById('scoring-area');
-  const isScramble = state.activeRound==='scramble';
-  const entities = isScramble ? state.scrambleTeams : state.players;
-
-  if (!entities.length) {
-    el.innerHTML = '<div class="empty">No players/teams set up</div>';
-    return;
-  }
-
-  const countClass = entities.length===1?'one-player':entities.length>=3?'three-up':'';
-
-  el.innerHTML = entities.map((entity)=>{
-    const sc = isScramble
-      ? (state.scrambleScores[entity.id]?.[h.number] || null)
-      : (state.scores[entity.id]?.[h.number] || {});
-    const score = isScramble ? (sc||'') : (sc.score||'');
-    const putts = isScramble ? '' : (sc.putts||0);
-    const gir   = isScramble ? false : !!sc.gir;
-    const fir   = isScramble ? false : !!sc.fir;
-
-    const scoreClass = score ? getScoreClass(score, h.par) : '';
-    const scoreLabel = score ? getScoreLabel(score, h.par) : '';
-    const color = isScramble ? '#c9a84c' : entity.color;
-    const displayName = isScramble
-      ? entity.name
-      : entity.name;
-
-    const firVisible = !isScramble && h.par!==3;
-
-    return `<div class="player-score-card ${countClass} ${scoreClass}" id="psc-${entity.id}">
-      <div class="score-glow"></div>
-      <div class="psc-name">
-        <div class="psc-dot" style="background:${color}"></div>
-        ${displayName}
-      </div>
-      <div class="score-display" id="sd-${entity.id}">${score||'—'}</div>
-      <div class="score-label ${scoreClass}" id="sl-${entity.id}">${scoreLabel}</div>
-      <div class="score-btns">
-        <button class="score-btn score-btn-minus" onclick="adjustScore('${entity.id}',${h.number},-1)">−</button>
-        <button class="score-btn score-btn-plus" onclick="adjustScore('${entity.id}',${h.number},1)">+</button>
-      </div>
-      ${!isScramble ? `
-      <div class="putt-row">
-        <button class="putt-btn" onclick="adjustPutts('${entity.id}',${h.number},-1)">−</button>
-        <div class="putt-val" id="pt-${entity.id}">${putts||'—'}</div>
-        <button class="putt-btn" onclick="adjustPutts('${entity.id}',${h.number},1)">+</button>
-        <div class="putt-label">putts</div>
-      </div>
-      <div class="psc-extras">
-        <div class="extra-btn ${gir?'on':''}" id="gir-${entity.id}" onclick="toggleExtra('${entity.id}',${h.number},'gir')">
-          GIR
-        </div>
-        ${firVisible?`<div class="extra-btn ${fir?'on':''}" id="fir-${entity.id}" onclick="toggleExtra('${entity.id}',${h.number},'fir')">
-          FIR
-        </div>`:''}
-      </div>` : ''}
-    </div>`;
-  }).join('');
-}
-
-function getScoreClass(score, par) {
-  const d = score-par;
-  if (d<=-2) return 'eagle';
-  if (d===-1) return 'birdie';
-  if (d===0) return 'par';
-  if (d===1) return 'bogey';
-  if (d===2) return 'double';
+function scoreClass(s,par){
+  const d=s-par;
+  if(d<=-2) return 'eagle';
+  if(d===-1) return 'birdie';
+  if(d===0) return 'par';
+  if(d===1) return 'bogey';
+  if(d===2) return 'double';
   return 'over';
 }
-function getScoreLabel(score, par) {
-  const d = score-par;
-  if (d<=-2) return 'Eagle 🦅';
-  if (d===-1) return 'Birdie 🐦';
-  if (d===0) return 'Par';
-  if (d===1) return 'Bogey';
-  if (d===2) return 'Double';
-  if (d===3) return 'Triple';
+function scoreLabel(s,par){
+  const d=s-par;
+  if(d<=-2) return 'Eagle 🦅';
+  if(d===-1) return 'Birdie 🐦';
+  if(d===0) return 'Par';
+  if(d===1) return 'Bogey';
+  if(d===2) return 'Double';
+  if(d===3) return 'Triple';
   return '+'+d;
 }
 
-function adjustScore(entityId, holeNum, delta) {
-  const h = state.course.holes.find(x=>x.number===holeNum);
-  if (!h) return;
-  const isScramble = state.activeRound==='scramble';
+function renderPlay(){
+  if(!S.round){
+    document.getElementById('hole-svg-wrap').innerHTML='';
+    document.getElementById('focus-card').className='focus-card';
+    document.getElementById('score-big').textContent='—';
+    document.getElementById('score-lbl').textContent='';
+    document.getElementById('fc-stats').innerHTML='';
+    document.getElementById('player-switcher').innerHTML='';
+    document.getElementById('progress-strip').innerHTML='';
+    return;
+  }
 
-  if (isScramble) {
-    if (!state.scrambleScores[entityId]) state.scrambleScores[entityId]={};
-    const cur = state.scrambleScores[entityId][holeNum]||h.par;
-    const next = Math.max(1, Math.min(15, cur+delta));
-    state.scrambleScores[entityId][holeNum] = next;
+  const h = S.course.holes.find(x=>x.n===S.hole);
+  if(!h) return;
+
+  // Top bar
+  const tee = S.players[0]?.tee||'white';
+  document.getElementById('play-round-lbl').textContent = S.round==='scramble'?'Scramble':'Own Ball';
+  document.getElementById('play-holenum').textContent = h.n;
+  document.getElementById('play-par').textContent = 'Par '+h.par;
+  document.getElementById('play-yds').textContent = (h.yds[tee]||h.yds.white)+' yds';
+  document.getElementById('play-hcp').textContent = '· HCP '+h.hcp;
+
+  // SVG
+  document.getElementById('hole-svg-wrap').innerHTML = makeHoleSVG(h, tee);
+
+  // Progress dots
+  const holes = getHoles();
+  document.getElementById('progress-strip').innerHTML = holes.map(hh=>{
+    const isCur = hh.n===S.hole;
+    const scored = isHoleScored(hh.n);
+    const cls = isCur ? 'pd current' : scored ? 'pd '+bestDotClass(hh.n) : 'pd';
+    return `<div class="${cls}" onclick="jumpHole(${hh.n})">${hh.n}</div>`;
+  }).join('');
+
+  // Prev/Next
+  const first=holes[0].n, last=holes[holes.length-1].n;
+  document.getElementById('btn-prev').disabled = h.n<=first;
+  document.getElementById('btn-next').disabled = h.n>=last;
+
+  // Focus card
+  renderFocusCard(h);
+}
+
+function renderFocusCard(h){
+  const entities = getEntities();
+  if(!entities.length) return;
+  if(S.focusIdx >= entities.length) S.focusIdx=0;
+  const e = entities[S.focusIdx];
+  const isScramble = S.round==='scramble';
+  const sc = scoreOf(e.id, h.n);
+  const cls = sc ? scoreClass(sc,h.par) : '';
+  const lbl = sc ? scoreLabel(sc,h.par) : '';
+  const color = isScramble ? '#e31937' : e.color;
+
+  document.getElementById('fc-dot').style.background = color;
+  document.getElementById('fc-pname').textContent = e.name;
+
+  const bigEl = document.getElementById('score-big');
+  bigEl.textContent = sc||'—';
+  bigEl.className = 'score-big '+(sc?cls:'');
+
+  const lblEl = document.getElementById('score-lbl');
+  lblEl.textContent = lbl;
+  lblEl.className = 'score-lbl '+(sc?cls:'');
+
+  const card = document.getElementById('focus-card');
+  card.className = 'focus-card '+(sc?cls:'');
+
+  // Stats
+  if(!isScramble){
+    const entry = S.scores[e.id]?.[h.n]||{};
+    const putts = entry.putts||0;
+    const gir = !!entry.gir;
+    const fir = !!entry.fir;
+    const firVis = h.par!==3;
+    document.getElementById('fc-stats').innerHTML = `
+      <div class="putt-ctrl">
+        <button class="pb" onclick="adjPutts(-1)">−</button>
+        <div class="pv">${putts||'—'}</div>
+        <button class="pb" onclick="adjPutts(1)">+</button>
+        <div class="pl">putts</div>
+      </div>
+      <div class="stat-tog ${gir?'on':''}" id="tog-gir" onclick="togExtra('gir')">GIR</div>
+      ${firVis?`<div class="stat-tog ${fir?'on':''}" id="tog-fir" onclick="togExtra('fir')">FIR</div>`:''}
+    `;
   } else {
-    if (!state.scores[entityId]) state.scores[entityId]={};
-    if (!state.scores[entityId][holeNum]) state.scores[entityId][holeNum]={};
-    const cur = state.scores[entityId][holeNum].score||h.par;
-    const next = Math.max(1, Math.min(15, cur+delta));
-    state.scores[entityId][holeNum].score = next;
+    document.getElementById('fc-stats').innerHTML='';
+  }
+
+  // Player switcher dots
+  document.getElementById('player-switcher').innerHTML = entities.map((ent,i)=>`
+    <div class="ps-dot ${i===S.focusIdx?'active':''}" onclick="switchFocus(${i})" title="${ent.name}"></div>
+  `).join('');
+}
+
+function switchFocus(idx){
+  S.focusIdx=idx;
+  const h=S.course.holes.find(x=>x.n===S.hole);
+  if(h) renderFocusCard(h);
+}
+
+function adj(delta){
+  const h=S.course.holes.find(x=>x.n===S.hole);
+  if(!h) return;
+  const e=curEntity(); if(!e) return;
+  const isScramble=S.round==='scramble';
+
+  if(isScramble){
+    if(!S.scrambleScores[e.id]) S.scrambleScores[e.id]={};
+    const cur=S.scrambleScores[e.id][h.n]||h.par;
+    S.scrambleScores[e.id][h.n]=Math.max(1,Math.min(15,cur+delta));
+  } else {
+    if(!S.scores[e.id]) S.scores[e.id]={};
+    if(!S.scores[e.id][h.n]) S.scores[e.id][h.n]={};
+    const cur=S.scores[e.id][h.n].score||h.par;
+    S.scores[e.id][h.n].score=Math.max(1,Math.min(15,cur+delta));
   }
   save();
 
-  // Update display
-  const score = isScramble ? state.scrambleScores[entityId][holeNum] : state.scores[entityId][holeNum].score;
-  const scoreClass = getScoreClass(score, h.par);
-  const label = getScoreLabel(score, h.par);
+  const sc=scoreOf(e.id,h.n);
+  const cls=scoreClass(sc,h.par);
+  const lbl=scoreLabel(sc,h.par);
 
-  const sd = document.getElementById('sd-'+entityId);
-  const sl = document.getElementById('sl-'+entityId);
-  const card = document.getElementById('psc-'+entityId);
+  const bigEl=document.getElementById('score-big');
+  bigEl.textContent=sc; bigEl.className='score-big '+cls;
+  bigEl.classList.add('popping'); setTimeout(()=>bigEl.classList.remove('popping'),240);
+  document.getElementById('score-lbl').textContent=lbl;
+  document.getElementById('score-lbl').className='score-lbl '+cls;
+  document.getElementById('focus-card').className='focus-card '+cls;
 
-  if (sd) { sd.textContent=score; sd.classList.add('score-pop'); setTimeout(()=>sd.classList.remove('score-pop'),300); }
-  if (sl) { sl.textContent=label; sl.className='score-label '+scoreClass; }
-  if (card) {
-    card.className = card.className.replace(/\b(eagle|birdie|par|bogey|double|over)\b/g,'').trim();
-    card.classList.add(scoreClass);
-  }
-
-  // Update progress dot
-  renderProgressDots();
-}
-
-function adjustPutts(playerId, holeNum, delta) {
-  if (!state.scores[playerId]) state.scores[playerId]={};
-  if (!state.scores[playerId][holeNum]) state.scores[playerId][holeNum]={};
-  const cur = state.scores[playerId][holeNum].putts||0;
-  state.scores[playerId][holeNum].putts = Math.max(0, Math.min(8, cur+delta));
-  save();
-  const el = document.getElementById('pt-'+playerId);
-  if (el) el.textContent = state.scores[playerId][holeNum].putts||'—';
-}
-
-function toggleExtra(playerId, holeNum, field) {
-  if (!state.scores[playerId]) state.scores[playerId]={};
-  if (!state.scores[playerId][holeNum]) state.scores[playerId][holeNum]={};
-  state.scores[playerId][holeNum][field] = !state.scores[playerId][holeNum][field];
-  save();
-  const el = document.getElementById(field+'-'+playerId);
-  if (el) el.classList.toggle('on', !!state.scores[playerId][holeNum][field]);
-}
-
-function renderProgressDots() {
-  const activeHoles = getActiveHoles();
-  document.getElementById('hole-progress').innerHTML = activeHoles.map(hn=>{
-    const isActive = hn===state.activeHole;
-    const isScored = isHoleScored(hn);
-    const dotClass = isActive ? 'hp-dot active' : isScored ? 'hp-dot scored '+getBestScoreClass(hn) : 'hp-dot';
-    return `<div class="${dotClass}" onclick="jumpToHole(${hn})">${hn}</div>`;
+  // update dots
+  const holes=getHoles();
+  document.getElementById('progress-strip').innerHTML=holes.map(hh=>{
+    const isCur=hh.n===S.hole;
+    const scored=isHoleScored(hh.n);
+    const dc=isCur?'pd current':scored?'pd '+bestDotClass(hh.n):'pd';
+    return `<div class="${dc}" onclick="jumpHole(${hh.n})">${hh.n}</div>`;
   }).join('');
 }
 
-function jumpToHole(num) {
-  state.activeHole = num;
+function adjPutts(delta){
+  const h=S.course.holes.find(x=>x.n===S.hole);
+  const e=curEntity(); if(!e||!h) return;
+  if(!S.scores[e.id]) S.scores[e.id]={};
+  if(!S.scores[e.id][h.n]) S.scores[e.id][h.n]={};
+  const cur=S.scores[e.id][h.n].putts||0;
+  S.scores[e.id][h.n].putts=Math.max(0,Math.min(8,cur+delta));
   save();
-  renderPlayScreen();
+  const pv=document.querySelector('.pv');
+  if(pv) pv.textContent=S.scores[e.id][h.n].putts||'—';
 }
 
-function nextHole() {
-  const activeHoles = getActiveHoles();
-  const idx = activeHoles.indexOf(state.activeHole);
-  if (idx < activeHoles.length-1) {
-    state.activeHole = activeHoles[idx+1];
-    save();
-    renderPlayScreen();
-    document.getElementById('hole-illustration').classList.add('hole-enter-right');
-    setTimeout(()=>document.getElementById('hole-illustration').classList.remove('hole-enter-right'),300);
-  }
+function togExtra(field){
+  const h=S.course.holes.find(x=>x.n===S.hole);
+  const e=curEntity(); if(!e||!h) return;
+  if(!S.scores[e.id]) S.scores[e.id]={};
+  if(!S.scores[e.id][h.n]) S.scores[e.id][h.n]={};
+  S.scores[e.id][h.n][field]=!S.scores[e.id][h.n][field];
+  save();
+  const el=document.getElementById('tog-'+field);
+  if(el) el.classList.toggle('on',!!S.scores[e.id][h.n][field]);
 }
 
-function prevHole() {
-  const activeHoles = getActiveHoles();
-  const idx = activeHoles.indexOf(state.activeHole);
-  if (idx > 0) {
-    state.activeHole = activeHoles[idx-1];
-    save();
-    renderPlayScreen();
-    document.getElementById('hole-illustration').classList.add('hole-enter-left');
-    setTimeout(()=>document.getElementById('hole-illustration').classList.remove('hole-enter-left'),300);
-  }
+function jumpHole(n){ S.hole=n; save(); renderPlay(); }
+
+function nextHole(){
+  const holes=getHoles(), idx=holes.findIndex(h=>h.n===S.hole);
+  if(idx<holes.length-1){ S.hole=holes[idx+1].n; S.focusIdx=0; save(); renderPlay(); }
+}
+function prevHole(){
+  const holes=getHoles(), idx=holes.findIndex(h=>h.n===S.hole);
+  if(idx>0){ S.hole=holes[idx-1].n; S.focusIdx=0; save(); renderPlay(); }
 }
 
-// ============================================================
-// SCORECARD SCREEN
-// ============================================================
-function renderScorecard() {
-  const el = document.getElementById('scorecard-content');
-  const isScramble = state.activeRound==='scramble';
-  document.getElementById('sc-round-label').textContent = isScramble ? '9-Hole Scramble' : '18-Hole Own Ball';
+// ═══════════════════ SCORECARD ═══════════════════
+function renderCard(){
+  const el=document.getElementById('sc-body');
+  const isScramble=S.round==='scramble';
+  document.getElementById('sc-sublbl').textContent=isScramble?'9-Hole Scramble':'18-Hole Own Ball';
+  const holes=isScramble?S.course.holes.filter(h=>S.scrambleNine==='back'?h.n>=10:h.n<=9):S.course.holes;
+  const entities=isScramble?S.scrambleTeams:S.players;
+  if(!entities.length){el.innerHTML='<div class="empty">No players yet</div>';return;}
 
-  if (!state.players.length && !state.scrambleTeams.length) {
-    el.innerHTML='<div class="empty">No players yet</div>'; return;
-  }
-
-  const holes = isScramble
-    ? state.course.holes.filter(h=>state.scrambleNine==='back'?h.number>=10:h.number<=9)
-    : state.course.holes;
-
-  const entities = isScramble ? state.scrambleTeams : state.players;
-  const nineCount = isScramble ? 1 : 2;
-
-  let html = '';
-
-  const renderNine = (nineHoles, label) => {
-    const totalPar = nineHoles.reduce((s,h)=>s+h.par,0);
-    html += `<div class="sc-wrap"><table class="sc">
-      <thead>
-        <tr>
-          <th>${label}</th>
-          ${nineHoles.map(h=>`<th>${h.number}</th>`).join('')}
-          <th>${isScramble?'Total':'Out/In'}</th>
-        </tr>
-        <tr>
-          <th>Par</th>
-          ${nineHoles.map(h=>`<th>${h.par}</th>`).join('')}
-          <th>${totalPar}</th>
-        </tr>
-      </thead><tbody>`;
-
-    entities.forEach(entity=>{
-      const color = isScramble ? '#c9a84c' : entity.color;
-      const entryMap = isScramble ? state.scrambleScores[entity.id]||{} : state.scores[entity.id]||{};
-      const total = nineHoles.reduce((s,h)=>{
-        const v = isScramble ? entryMap[h.number] : entryMap[h.number]?.score;
-        return v ? s+v : s;
-      },0);
-
-      html += `<tr><td class="player-name-cell"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:5px"></span>${entity.name}</td>`;
-      nineHoles.forEach(h=>{
-        const v = isScramble ? entryMap[h.number] : entryMap[h.number]?.score;
-        const cls = v ? 'sc-'+getScoreClass(v,h.par) : '';
-        html += `<td class="${cls}">${v||''}</td>`;
-      });
-      html += `<td class="par-total">${total||'—'}</td></tr>`;
+  const renderNine=(nh,lbl)=>{
+    const tp=nh.reduce((s,h)=>s+h.par,0);
+    let t=`<div class="sc-wrap"><table class="sc"><thead>
+      <tr><th>${lbl}</th>${nh.map(h=>`<th>${h.n}</th>`).join('')}<th>TOT</th></tr>
+      <tr><th>Par</th>${nh.map(h=>`<th>${h.par}</th>`).join('')}<th>${tp}</th></tr>
+    </thead><tbody>`;
+    entities.forEach(e=>{
+      const em=isScramble?S.scrambleScores[e.id]||{}:S.scores[e.id]||{};
+      const tot=nh.reduce((s,h)=>{const v=isScramble?em[h.n]:em[h.n]?.score;return v?s+v:s;},0);
+      const color=isScramble?'#e31937':e.color;
+      t+=`<tr><td class="sc-name"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${color};margin-right:5px;vertical-align:middle"></span>${e.name}</td>`;
+      nh.forEach(h=>{const v=isScramble?em[h.n]:em[h.n]?.score;const c=v?'sc-'+scoreClass(v,h.par):'';t+=`<td class="${c}">${v||''}</td>`;});
+      t+=`<td class="sc-total">${tot||'—'}</td></tr>`;
     });
-
-    html += '</tbody></table></div>';
+    t+='</tbody></table></div>';
+    return t;
   };
 
-  if (isScramble) {
-    renderNine(holes, state.scrambleNine==='back'?'Back 9':'Front 9');
+  let html='';
+  if(isScramble){
+    html+=renderNine(holes, S.scrambleNine==='back'?'Back 9':'Front 9');
   } else {
-    renderNine(holes.slice(0,9), 'Front 9');
-    renderNine(holes.slice(9,18), 'Back 9');
-
-    // Totals table
-    html += `<div class="sc-wrap"><table class="sc"><thead>
+    html+=renderNine(holes.slice(0,9),'Front 9');
+    html+=renderNine(holes.slice(9,18),'Back 9');
+    // Totals
+    const tp=holes.reduce((s,h)=>s+h.par,0);
+    html+=`<div class="sc-wrap sc-totals-table" style="padding-bottom:20px"><table class="sc"><thead>
       <tr><th>Player</th><th>Front</th><th>Back</th><th>Total</th><th>+/−</th><th>Net</th><th>GIR%</th><th>FIR%</th><th>Putts</th></tr>
     </thead><tbody>`;
-    const totalPar = holes.reduce((s,h)=>s+h.par,0);
-    state.players.forEach(p=>{
-      const sc = state.scores[p.id]||{};
-      const front = holes.slice(0,9).reduce((s,h)=>s+(sc[h.number]?.score||0),0);
-      const back  = holes.slice(9).reduce((s,h)=>s+(sc[h.number]?.score||0),0);
-      const total = front+back;
-      const rel   = total ? total-totalPar : null;
-      const relStr = rel===null?'—':rel===0?'E':rel>0?'+'+rel:''+rel;
-      const relCls = rel===null?'':rel<0?'rel-neg':rel>0?'rel-pos':'rel-e';
-      const putts  = holes.reduce((s,h)=>s+(sc[h.number]?.putts||0),0);
-      const girs   = holes.filter(h=>sc[h.number]?.gir).length;
-      const firH   = holes.filter(h=>h.par!==3);
-      const firs   = firH.filter(h=>sc[h.number]?.fir).length;
-      html += `<tr>
-        <td class="player-name-cell"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${p.color};margin-right:5px"></span>${p.name}</td>
-        <td>${front||'—'}</td><td>${back||'—'}</td>
-        <td><strong>${total||'—'}</strong></td>
-        <td class="${relCls}">${relStr}</td>
-        <td>${total?total-p.handicap:'—'}</td>
-        <td>${total?Math.round(girs/18*100)+'%':'—'}</td>
-        <td>${total?Math.round(firs/firH.length*100)+'%':'—'}</td>
+    S.players.forEach(p=>{
+      const sc=S.scores[p.id]||{};
+      const f=holes.slice(0,9).reduce((s,h)=>s+(sc[h.n]?.score||0),0);
+      const b=holes.slice(9).reduce((s,h)=>s+(sc[h.n]?.score||0),0);
+      const tot=f+b, rel=tot?tot-tp:null;
+      const rs=rel===null?'—':rel===0?'E':rel>0?'+'+rel:''+rel;
+      const rc=rel===null?'':rel<0?'style="color:#e31937;font-weight:700"':rel>0?'style="color:#fbbf24"':'style="color:#60a5fa;font-weight:700"';
+      const putts=holes.reduce((s,h)=>s+(sc[h.n]?.putts||0),0);
+      const girs=holes.filter(h=>sc[h.n]?.gir).length;
+      const firH=holes.filter(h=>h.par!==3);
+      const firs=firH.filter(h=>sc[h.n]?.fir).length;
+      html+=`<tr><td class="sc-name"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${p.color};margin-right:5px;vertical-align:middle"></span>${p.name}</td>
+        <td>${f||'—'}</td><td>${b||'—'}</td>
+        <td><strong>${tot||'—'}</strong></td>
+        <td ${rc}>${rs}</td>
+        <td>${tot?tot-p.hcp:'—'}</td>
+        <td>${tot?Math.round(girs/18*100)+'%':'—'}</td>
+        <td>${tot?Math.round(firs/firH.length*100)+'%':'—'}</td>
         <td>${putts||'—'}</td>
       </tr>`;
     });
-    html += '</tbody></table></div>';
+    html+='</tbody></table></div>';
   }
-
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
 
-// ============================================================
-// LEADERBOARD
-// ============================================================
-function renderLeaderboard() {
-  const el = document.getElementById('lb-content');
-  let html = '';
+// ═══════════════════ LEADERBOARD ═══════════════════
+function renderLB(){
+  const el=document.getElementById('lb-body');
+  let html='';
 
-  // 18-hole
-  if (state.players.length) {
-    const holes = state.course.holes;
-    const totalPar = holes.reduce((s,h)=>s+h.par,0);
-    const rows = state.players.map(p=>{
-      const sc = state.scores[p.id]||{};
-      const total = holes.reduce((s,h)=>s+(sc[h.number]?.score||0),0);
-      const thru  = holes.filter(h=>sc[h.number]?.score).length;
-      const rel   = total ? total-totalPar : null;
-      return {p,total,rel,thru};
-    }).filter(r=>r.total>0).sort((a,b)=>a.total-b.total);
+  if(S.players.length){
+    const holes=S.course.holes, tp=holes.reduce((s,h)=>s+h.par,0);
+    const rows=S.players.map(p=>{
+      const sc=S.scores[p.id]||{};
+      const tot=holes.reduce((s,h)=>s+(sc[h.n]?.score||0),0);
+      const thru=holes.filter(h=>sc[h.n]?.score).length;
+      const rel=tot?tot-tp:null;
+      return{p,tot,rel,thru};
+    }).filter(r=>r.tot>0).sort((a,b)=>a.tot-b.tot);
 
-    html += '<div class="section-divider">18-Hole Own Ball</div>';
-    if (!rows.length) {
-      html += '<div class="empty">No scores yet — start a round!</div>';
-    } else {
-      rows.forEach((r,i)=>{
-        const relStr = r.rel===0?'E':r.rel>0?'+'+r.rel:''+r.rel;
-        const relCls = r.rel<0?'neg':r.rel>0?'pos':'even';
-        html += `<div class="lb-row">
-          <div class="lb-pos">${i+1}</div>
-          <div class="lb-avatar" style="background:${r.p.color}22;color:${r.p.color}">${initials(r.p.name)}</div>
-          <div class="lb-info"><strong>${r.p.name}</strong><span class="lb-thru">Thru ${r.thru} · HCP ${r.p.handicap}</span></div>
-          <div class="lb-score">
-            <div class="lb-gross">${r.total}</div>
-            <div class="lb-rel ${relCls}">${relStr}</div>
-          </div>
-        </div>`;
-      });
-    }
-  }
-
-  // Scramble
-  if (state.scrambleTeams.length) {
-    const scramHoles = state.course.holes.filter(h=>state.scrambleNine==='back'?h.number>=10:h.number<=9);
-    const scramPar = scramHoles.reduce((s,h)=>s+h.par,0);
-    const srows = state.scrambleTeams.map(t=>{
-      const sc = state.scrambleScores[t.id]||{};
-      const total = scramHoles.reduce((s,h)=>s+(sc[h.number]||0),0);
-      const rel = total ? total-scramPar : null;
-      const names = t.players.map(id=>state.players.find(p=>p.id===id)?.name||'?').join(' & ');
-      return {t,total,rel,names};
-    }).filter(r=>r.total>0).sort((a,b)=>a.total-b.total);
-
-    html += '<div class="section-divider">9-Hole Scramble</div>';
-    if (!srows.length) {
-      html += '<div class="empty">No scramble scores yet</div>';
-    } else {
-      srows.forEach((r,i)=>{
-        const relStr = r.rel===0?'E':r.rel>0?'+'+r.rel:''+r.rel;
-        const relCls = r.rel<0?'neg':r.rel>0?'pos':'even';
-        html += `<div class="lb-row">
-          <div class="lb-pos">${i+1}</div>
-          <div class="lb-avatar" style="background:rgba(201,168,76,0.15);color:var(--gold)">🤝</div>
-          <div class="lb-info"><strong>${r.t.name}</strong><span class="lb-thru">${r.names}</span></div>
-          <div class="lb-score">
-            <div class="lb-gross">${r.total}</div>
-            <div class="lb-rel ${relCls}">${relStr}</div>
-          </div>
-        </div>`;
-      });
-    }
-  }
-
-  if (!html) html = '<div class="empty">Start a round to see standings</div>';
-  el.innerHTML = html;
-}
-
-// ============================================================
-// STATS
-// ============================================================
-function renderStats() {
-  const el = document.getElementById('stats-content');
-  const holes = state.course.holes;
-  const firHoles = holes.filter(h=>h.par!==3);
-
-  if (!state.players.length) {
-    el.innerHTML='<div class="empty">Add players to see stats</div>'; return;
-  }
-
-  let html = '';
-  state.players.forEach(p=>{
-    const sc = state.scores[p.id]||{};
-    const played = holes.filter(h=>sc[h.number]?.score);
-    if (!played.length) return;
-
-    const total = played.reduce((s,h)=>s+sc[h.number].score,0);
-    const par   = played.reduce((s,h)=>s+h.par,0);
-    const rel   = total-par;
-    const relStr= rel===0?'E':rel>0?'+'+rel:''+rel;
-    const putts = holes.reduce((s,h)=>s+(sc[h.number]?.putts||0),0);
-    const girs  = played.filter(h=>sc[h.number]?.gir).length;
-    const firs  = firHoles.filter(h=>sc[h.number]?.fir).length;
-    const firPlayable = firHoles.filter(h=>sc[h.number]?.score).length;
-
-    let eagles=0,birdies=0,pars=0,bogeys=0,doubles=0,triples=0;
-    played.forEach(h=>{
-      const d=sc[h.number].score-h.par;
-      if(d<=-2)eagles++;else if(d===-1)birdies++;else if(d===0)pars++;else if(d===1)bogeys++;else if(d===2)doubles++;else triples++;
+    html+='<div class="section-sep">Own Ball — 18 Holes</div><div class="lb-list">';
+    if(!rows.length) html+='<div class="empty">No scores yet — start a round!</div>';
+    rows.forEach((r,i)=>{
+      const rs=r.rel===0?'E':r.rel>0?'+'+r.rel:''+r.rel;
+      const rc=r.rel<0?'neg':r.rel>0?'pos':'even';
+      html+=`<div class="lb-row">
+        <div class="lb-pos">${i+1}</div>
+        <div class="lb-av" style="background:${r.p.color}22;color:${r.p.color}">${initials(r.p.name)}</div>
+        <div class="lb-info"><strong>${r.p.name}</strong><small>Thru ${r.thru} · HCP ${r.p.hcp}</small></div>
+        <div class="lb-scores"><div class="lb-gross">${r.tot}</div><div class="lb-rel ${rc}">${rs}</div></div>
+      </div>`;
     });
+    html+='</div>';
+  }
 
-    html += `<div class="stats-player-block fade-up">
-      <div class="stats-player-header">
-        <div class="stats-avatar" style="background:${p.color}22;color:${p.color}">${initials(p.name)}</div>
-        <div>
-          <h3>${p.name}</h3>
-          <p>${played.length}/18 holes · HCP ${p.handicap} · ${p.tee} tees</p>
-        </div>
+  if(S.scrambleTeams.length){
+    const sh=S.course.holes.filter(h=>S.scrambleNine==='back'?h.n>=10:h.n<=9);
+    const sp=sh.reduce((s,h)=>s+h.par,0);
+    const srows=S.scrambleTeams.map(t=>{
+      const sc=S.scrambleScores[t.id]||{};
+      const tot=sh.reduce((s,h)=>s+(sc[h.n]||0),0);
+      const rel=tot?tot-sp:null;
+      const names=t.players.map(id=>S.players.find(p=>p.id===id)?.name||'?').join(' & ');
+      return{t,tot,rel,names};
+    }).filter(r=>r.tot>0).sort((a,b)=>a.tot-b.tot);
+
+    html+='<div class="section-sep">Scramble — 9 Holes</div><div class="lb-list">';
+    if(!srows.length) html+='<div class="empty">No scramble scores yet</div>';
+    srows.forEach((r,i)=>{
+      const rs=r.rel===0?'E':r.rel>0?'+'+r.rel:''+r.rel;
+      const rc=r.rel<0?'neg':r.rel>0?'pos':'even';
+      html+=`<div class="lb-row">
+        <div class="lb-pos">${i+1}</div>
+        <div class="lb-av" style="background:rgba(227,25,55,.12);color:var(--red)">🤝</div>
+        <div class="lb-info"><strong>${r.t.name}</strong><small>${r.names}</small></div>
+        <div class="lb-scores"><div class="lb-gross">${r.tot}</div><div class="lb-rel ${rc}">${rs}</div></div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+
+  if(!html) html='<div class="empty">Start a round to see standings</div>';
+  el.innerHTML=html;
+}
+
+// ═══════════════════ STATS ═══════════════════
+function renderStats(){
+  const el=document.getElementById('stats-body');
+  const holes=S.course.holes, firH=holes.filter(h=>h.par!==3);
+  if(!S.players.length){el.innerHTML='<div class="empty">Add players to see stats</div>';return;}
+  let html='';
+  S.players.forEach(p=>{
+    const sc=S.scores[p.id]||{};
+    const played=holes.filter(h=>sc[h.n]?.score);
+    if(!played.length) return;
+    const tot=played.reduce((s,h)=>s+sc[h.n].score,0);
+    const par=played.reduce((s,h)=>s+h.par,0);
+    const rel=tot-par, rs=rel===0?'E':rel>0?'+'+rel:''+rel;
+    const putts=holes.reduce((s,h)=>s+(sc[h.n]?.putts||0),0);
+    const girs=played.filter(h=>sc[h.n]?.gir).length;
+    const firs=firH.filter(h=>sc[h.n]?.fir).length;
+    const firP=firH.filter(h=>sc[h.n]?.score).length;
+    let eagles=0,birdies=0,pars=0,bogeys=0,doubles=0,triples=0;
+    played.forEach(h=>{const d=sc[h.n].score-h.par;if(d<=-2)eagles++;else if(d===-1)birdies++;else if(d===0)pars++;else if(d===1)bogeys++;else if(d===2)doubles++;else triples++;});
+    html+=`<div class="stats-block">
+      <div class="stats-ph">
+        <div class="stats-av" style="background:${p.color}22;color:${p.color}">${initials(p.name)}</div>
+        <div><h3>${p.name}</h3><p>${played.length}/18 holes · HCP ${p.hcp} · ${p.tee} tees</p></div>
       </div>
       <div class="stat-grid">
-        <div class="stat-box"><div class="sv">${total}</div><div class="sl">Gross</div></div>
-        <div class="stat-box"><div class="sv">${relStr}</div><div class="sl">vs Par</div></div>
-        <div class="stat-box"><div class="sv">${total-p.handicap}</div><div class="sl">Net</div></div>
-        <div class="stat-box"><div class="sv">${played.length?Math.round(girs/played.length*100)+'%':'—'}</div><div class="sl">GIR</div></div>
-        <div class="stat-box"><div class="sv">${firPlayable?Math.round(firs/firPlayable*100)+'%':'—'}</div><div class="sl">FIR</div></div>
-        <div class="stat-box"><div class="sv">${putts||'—'}</div><div class="sl">Putts</div></div>
+        <div class="sg-box"><div class="v">${tot}</div><div class="l">Gross</div></div>
+        <div class="sg-box"><div class="v">${rs}</div><div class="l">vs Par</div></div>
+        <div class="sg-box"><div class="v">${tot-p.hcp}</div><div class="l">Net</div></div>
+        <div class="sg-box"><div class="v">${played.length?Math.round(girs/played.length*100)+'%':'—'}</div><div class="l">GIR</div></div>
+        <div class="sg-box"><div class="v">${firP?Math.round(firs/firP*100)+'%':'—'}</div><div class="l">FIR</div></div>
+        <div class="sg-box"><div class="v">${putts||'—'}</div><div class="l">Putts</div></div>
       </div>
-      <div class="scoring-breakdown">
-        ${eagles?`<div class="sb-pill sb-eagle">🦅 ${eagles} Eagle${eagles>1?'s':''}</div>`:''}
-        ${birdies?`<div class="sb-pill sb-birdie">🐦 ${birdies} Birdie${birdies>1?'s':''}</div>`:''}
-        ${pars?`<div class="sb-pill sb-par">${pars} Par${pars>1?'s':''}</div>`:''}
-        ${bogeys?`<div class="sb-pill sb-bogey">${bogeys} Bogey${bogeys>1?'s':''}</div>`:''}
-        ${doubles?`<div class="sb-pill sb-double">${doubles} Double${doubles>1?'s':''}</div>`:''}
-        ${triples?`<div class="sb-pill sb-triple">${triples} Triple+</div>`:''}
+      <div class="sb-pills">
+        ${eagles?`<div class="sbp sbp-eagle">🦅 ${eagles} Eagle${eagles>1?'s':''}</div>`:''}
+        ${birdies?`<div class="sbp sbp-birdie">🐦 ${birdies} Birdie${birdies>1?'s':''}</div>`:''}
+        ${pars?`<div class="sbp sbp-par">${pars} Par${pars>1?'s':''}</div>`:''}
+        ${bogeys?`<div class="sbp sbp-bogey">${bogeys} Bogey${bogeys>1?'s':''}</div>`:''}
+        ${doubles?`<div class="sbp sbp-double">${doubles} Double${doubles>1?'s':''}</div>`:''}
+        ${triples?`<div class="sbp sbp-triple">${triples} Triple+</div>`:''}
       </div>
     </div>`;
   });
-
-  if (!html) html = '<div class="empty">Enter some scores to see stats</div>';
-  el.innerHTML = html;
+  if(!html) html='<div class="empty">Enter scores to see stats</div>';
+  el.innerHTML=html;
 }
 
-// ============================================================
-// INIT
-// ============================================================
+// ═══════════════════ INIT ═══════════════════
 load();
-renderPlayerListHome();
-if (colorIdx < state.players.length) colorIdx = state.players.length;
-document.getElementById('p-color').value = PLAYER_COLORS[colorIdx % PLAYER_COLORS.length];
+if(cIdx<S.players.length) cIdx=S.players.length;
+document.getElementById('p-color').value=COLORS[cIdx%COLORS.length];
+renderPlayerList();
 
-// Keyboard navigation for holes
-document.addEventListener('keydown', e=>{
-  if (currentTab==='play') {
-    if (e.key==='ArrowRight'||e.key==='ArrowDown') nextHole();
-    if (e.key==='ArrowLeft'||e.key==='ArrowUp') prevHole();
+document.addEventListener('keydown',e=>{
+  if(curTab==='play'){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') nextHole();
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp') prevHole();
   }
 });
+
+// Swipe left/right on play canvas to change hole
+(()=>{
+  let tx=0, ty=0;
+  const el = document.getElementById('s-play');
+  el.addEventListener('touchstart', e=>{ tx=e.touches[0].clientX; ty=e.touches[0].clientY; }, {passive:true});
+  el.addEventListener('touchend', e=>{
+    if(curTab!=='play') return;
+    const dx=e.changedTouches[0].clientX-tx;
+    const dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>42){
+      dx<0 ? nextHole() : prevHole();
+    }
+  }, {passive:true});
+})();
 </script>
 </body>
 </html>
